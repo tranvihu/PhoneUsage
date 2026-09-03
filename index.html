@@ -10,8 +10,23 @@
 <body class="bg-gray-50 font-sans p-4 md:p-8">
     <div class="max-w-7xl mx-auto space-y-6">
         <div class="text-center">
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">📱 Dashboard Quản Lý Thời Gian Sử Dụng</h1>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">📱 Quản Lý Thời Gian Sử Dụng</h1>
             <p class="text-gray-500">Phân tích chi tiết thói quen dùng điện thoại của gia đình</p>
+        </div>
+
+        <!-- CẢNH BÁO LÊN ĐỒN CÔNG AN -->
+        <div class="bg-red-50 rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-red-500">
+            <div class="flex justify-between items-end mb-2">
+                <h3 class="text-lg font-bold text-red-700 flex items-center">
+                    <svg class="w-6 h-6 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Nguy Cơ Mời Lên Đồn Công An (Vì dùng ĐT quá nhiều)
+                </h3>
+                <span class="text-red-700 font-bold">95%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 h-4 rounded-full" style="width: 95%"></div>
+            </div>
+            <p class="text-sm text-red-600 mt-2 font-semibold">Cảnh báo: Sắp vượt ngưỡng cho phép. Chỉ cần dùng thêm một chút nữa là xe thùng đến đón!</p>
         </div>
 
         <!-- BẢNG ĐIỀU KHIỂN & COMBOBOX -->
@@ -64,7 +79,7 @@
         <div class="flex flex-col items-center justify-center gap-2 mt-4 pb-8">
             <button id="refreshBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center w-full md:w-auto">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                Mô phỏng cập nhật dữ liệu hôm nay
+                Cập nhật dữ liệu
             </button>
         </div>
     </div>
