@@ -344,49 +344,75 @@
         });
 
 
-        // --- LOGIC LỌC COMBOBOX ---
+        // --- LOGIC LỌC COMBOBOX VÀ RANDOM APP ---
         const userDetails = {
             bo: { 
                 name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-blue-800', 
-                apps: [
-                    { name: 'Trình duyệt Web', percent: '40%', icon: '🌐' }, 
-                    { name: 'Zalo', percent: '30%', icon: '💬' }, 
-                    { name: 'YouTube', percent: '20%', icon: '▶️' }
-                ],
                 violations: ["Thức khuya đọc báo qua 23h đêm", "Sử dụng điện thoại trong bữa ăn"]
             },
             me: { 
                 name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân & Máy Bố', color: 'text-purple-800', 
-                apps: [
-                    { name: 'Facebook', percent: '40%', icon: '📘' }, 
-                    { name: 'TikTok', percent: '35%', icon: '🎵' }, 
-                    { name: 'Shopee', percent: '15%', icon: '🛍️' }
-                ],
                 violations: ["Lướt TikTok âm lượng lớn", "Mua sắm online vượt chỉ tiêu", "Vừa sạc vừa dùng điện thoại"]
             },
             khanh: { 
                 name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-green-800', 
-                apps: [
-                    { name: 'YouTube', percent: '35%', icon: '▶️' }, 
-                    { name: 'Trò chơi điện tử', percent: '25%', icon: '🎮' }, 
-                    { name: 'Duolingo', percent: '20%', icon: '🦉' }, 
-                    { name: 'Zalo', percent: '10%', icon: '💬' }, 
-                    { name: 'Cuộc gọi/Tin nhắn', percent: '10%', icon: '📞' }
-                ],
                 violations: ["Xem YouTube lén lúc nghỉ trưa", "Đến giờ không chịu đi tắm", "Chơi game quá 60 phút không nghỉ mắt"]
             },
             linh: { 
                 name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-red-800', 
-                apps: [
-                    { name: 'Facebook', percent: '30%', icon: '📘' }, 
-                    { name: 'Messenger', percent: '25%', icon: '💬' }, 
-                    { name: 'YouTube', percent: '20%', icon: '▶️' }, 
-                    { name: 'Zalo', percent: '15%', icon: '💬' }, 
-                    { name: 'Duolingo', percent: '10%', icon: '🦉' }
-                ],
                 violations: ["Vừa ăn cơm vừa dán mắt vào màn hình", "Giành điện thoại của anh", "Gọi điện thoại buôn chuyện quá lâu"]
             }
         };
+
+        const allPlatforms = [
+            { id: 'youtube', name: 'YouTube', icon: '▶️' },
+            { id: 'facebook', name: 'Facebook', icon: '📘' },
+            { id: 'zalo', name: 'Zalo', icon: '💬' },
+            { id: 'tiktok', name: 'TikTok', icon: '🎵' },
+            { id: 'game', name: 'Trò chơi điện tử', icon: '🎮' },
+            { id: 'duolingo', name: 'Duolingo', icon: '🦉' },
+            { id: 'web', name: 'Trình duyệt Web', icon: '🌐' },
+            { id: 'shopee', name: 'Shopee', icon: '🛍️' },
+            { id: 'call', name: 'Cuộc gọi/Tin nhắn', icon: '📞' }
+        ];
+
+        function getRandomApps(userId) {
+            let weights = {};
+            if (userId === 'khanh' || userId === 'linh') {
+                // Trẻ em: xem nhiều youtube, game, tiktok, duolingo. Không dùng web, facebook, zalo, shopee.
+                weights = { youtube: 40, game: 30, tiktok: 20, duolingo: 10, facebook: 0, zalo: 0, web: 0, shopee: 0, call: 0 };
+                if (userId === 'linh') { weights.facebook = 15; weights.game = 10; weights.call = 5; }
+            } else {
+                // Người lớn: dùng đa dạng
+                weights = { youtube: 15, facebook: 30, zalo: 20, web: 20, tiktok: 10, shopee: 10, call: 5, game: 0, duolingo: 0 };
+                if (userId === 'me') { weights.shopee = 35; weights.tiktok = 25; }
+                if (userId === 'bo') { weights.web = 40; weights.shopee = 0; weights.tiktok = 0; }
+            }
+
+            let appData = allPlatforms.map(app => {
+                let baseW = weights[app.id];
+                // Random lệch +- 5 đơn vị nếu có dùng
+                let val = baseW > 0 ? baseW + (Math.random() * 10 - 5) : 0; 
+                return { ...app, val: Math.max(0, val) };
+            });
+
+            let total = appData.reduce((sum, app) => sum + app.val, 0);
+            
+            appData = appData.map(app => {
+                let pct = total > 0 && app.val > 0 ? Math.round((app.val / total) * 100) : 0;
+                return { ...app, percent: pct };
+            });
+
+            // Đảm bảo tổng chính xác = 100%
+            let actualSum = appData.reduce((sum, app) => sum + app.percent, 0);
+            if (actualSum > 0 && actualSum !== 100) {
+                appData.sort((a,b) => b.percent - a.percent);
+                appData[0].percent += (100 - actualSum);
+            }
+
+            // Sắp xếp giảm dần theo phần trăm để hiển thị
+            return appData.sort((a, b) => b.percent - a.percent);
+        }
 
         document.getElementById('userSelect').addEventListener('change', function(e) {
             const val = e.target.value;
@@ -411,13 +437,19 @@
                 violationPanel.classList.remove('hidden');
                 violationList.innerHTML = user.violations.map(v => `<li>⚠️ ${v}</li>`).join('');
                 
+                // Random app data
+                const randomApps = getRandomApps(val);
                 let appsHtml = '';
-                user.apps.forEach(app => {
+                randomApps.forEach(app => {
+                    // In xám mờ và gạch ngang nếu 0%
+                    let textClass = app.percent === 0 ? "text-gray-400 line-through" : "text-gray-700";
+                    let pctClass = app.percent === 0 ? "text-gray-400" : "text-blue-900";
+                    
                     appsHtml += `<tr>
-                                    <td class="border p-2 font-semibold text-gray-700 flex items-center gap-2">
-                                        <span class="text-xl">${app.icon}</span> ${app.name}
+                                    <td class="border p-2 font-semibold ${textClass} flex items-center gap-2">
+                                        <span class="text-xl ${app.percent === 0 ? 'grayscale opacity-50' : ''}">${app.icon}</span> ${app.name}
                                     </td>
-                                    <td class="border p-2 font-bold text-center w-24 text-blue-900">${app.percent}</td>
+                                    <td class="border p-2 font-bold text-center w-24 ${pctClass}">${app.percent}%</td>
                                  </tr>`;
                 });
 
@@ -438,7 +470,7 @@
                         <div class="w-full md:w-1/2">
                             <table class="w-full text-sm border-collapse">
                                 <thead>
-                                    <tr><th colspan="2" class="border p-2 bg-gray-100 text-center">Nền tảng tiêu thụ dữ liệu cao nhất</th></tr>
+                                    <tr><th colspan="2" class="border p-2 bg-gray-100 text-center">Tỷ lệ truy cập các nền tảng kỹ thuật số</th></tr>
                                 </thead>
                                 <tbody>
                                     ${appsHtml}
