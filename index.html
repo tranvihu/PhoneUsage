@@ -6,8 +6,10 @@
     <title>Cổng Thông Tin Giám Sát Điện Tử</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Thêm font Roboto để hỗ trợ tiếng Việt chuẩn xác và trông nghiêm túc -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #e5e7eb; }
+        body { font-family: 'Roboto', sans-serif; background-color: #e5e7eb; }
         .gov-header { 
             background-color: #0f172a; 
             color: #facc15; 
@@ -42,17 +44,17 @@
         <!-- BẢNG ĐIỀU KHIỂN -->
         <div class="panel">
             <div class="panel-header flex items-center">
-                <span class="mr-2">🔎</span> Trích Xuất Dữ Liệu Giám Sát Đối Tượng
+                <span class="mr-2">🔎</span> Trích Xuất Dữ Liệu Giám Sát Cá Nhân
             </div>
             <div class="p-4 md:p-6 bg-gray-50">
                 <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
                     <label for="userSelect" class="font-bold text-gray-800 uppercase text-sm">Mã định danh (Họ tên):</label>
                     <select id="userSelect" class="border-2 border-gray-400 p-2 w-full md:w-64 bg-white font-bold text-blue-900 shadow-inner uppercase">
                         <option value="all">-- TOÀN BỘ DANH SÁCH --</option>
-                        <option value="bo">ĐỐI TƯỢNG: BỐ</option>
-                        <option value="me">ĐỐI TƯỢNG: MẸ</option>
-                        <option value="khanh">ĐỐI TƯỢNG: NHẬT KHÁNH</option>
-                        <option value="linh">ĐỐI TƯỢNG: NHẬT LINH</option>
+                        <option value="bo">HỒ SƠ: BỐ</option>
+                        <option value="me">HỒ SƠ: MẸ</option>
+                        <option value="khanh">HỒ SƠ: NHẬT KHÁNH</option>
+                        <option value="linh">HỒ SƠ: NHẬT LINH</option>
                     </select>
                 </div>
                 <p class="text-xs text-red-600 font-bold mt-2 italic">* Cảnh báo: Mọi truy cập đều được ghi log tại máy chủ của Bộ Công An.</p>
@@ -143,8 +145,8 @@
     </div>
 
     <script>
-        // Set Font cho Chart.js về Arial cho nghiêm túc
-        Chart.defaults.font.family = 'Arial, sans-serif';
+        // Set Font cho Chart.js về Roboto
+        Chart.defaults.font.family = 'Roboto, sans-serif';
         Chart.defaults.font.size = 12;
 
         // --- DATA SETUP ---
@@ -171,10 +173,10 @@
         const hourlyLabels = ['8h-10h', '10h-12h', '12h-14h', '14h-16h', '16h-18h', '18h-20h', '20h-22h'];
 
         const originalDailyDatasets = [
-            { id: 'bo', label: 'Đối tượng: Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.1, borderWidth: 2, pointRadius: 3 },
-            { id: 'me', label: 'Đối tượng: Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.1, borderWidth: 2, pointRadius: 3 },
-            { id: 'khanh', label: 'Đối tượng: Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.1, borderWidth: 2, pointRadius: 3 },
-            { id: 'linh', label: 'Đối tượng: Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.1, borderWidth: 2, pointRadius: 3 }
+            { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.1, borderWidth: 2, pointRadius: 3 },
+            { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.1, borderWidth: 2, pointRadius: 3 },
+            { id: 'khanh', label: 'Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.1, borderWidth: 2, pointRadius: 3 },
+            { id: 'linh', label: 'Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.1, borderWidth: 2, pointRadius: 3 }
         ];
 
         const originalCrossDatasets = [
@@ -185,10 +187,10 @@
         ];
 
         const originalHourlyDatasets = [
-            { id: 'bo', label: 'Đối tượng: Bố', data: [0.2, 0.4, 1.2, 0.3, 0.5, 0.8, 1.6], borderColor: colors.bo, backgroundColor: colors.bo + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
-            { id: 'me', label: 'Đối tượng: Mẹ', data: [0.3, 0.8, 1.5, 0.4, 0.6, 1.2, 1.8], borderColor: colors.me, backgroundColor: colors.me + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
-            { id: 'khanh', label: 'Đối tượng: Khánh', data: [0.0, 0.1, 1.8, 0.0, 0.2, 1.4, 2.0], borderColor: colors.khanh, backgroundColor: colors.khanh + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
-            { id: 'linh', label: 'Đối tượng: Linh', data: [0.0, 0.2, 1.6, 0.1, 0.4, 1.5, 1.9], borderColor: colors.linh, backgroundColor: colors.linh + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 }
+            { id: 'bo', label: 'Bố', data: [0.2, 0.4, 1.2, 0.3, 0.5, 0.8, 1.6], borderColor: colors.bo, backgroundColor: colors.bo + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
+            { id: 'me', label: 'Mẹ', data: [0.3, 0.8, 1.5, 0.4, 0.6, 1.2, 1.8], borderColor: colors.me, backgroundColor: colors.me + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
+            { id: 'khanh', label: 'Khánh', data: [0.0, 0.1, 1.8, 0.0, 0.2, 1.4, 2.0], borderColor: colors.khanh, backgroundColor: colors.khanh + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
+            { id: 'linh', label: 'Linh', data: [0.0, 0.2, 1.6, 0.1, 0.4, 1.5, 1.9], borderColor: colors.linh, backgroundColor: colors.linh + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 }
         ];
 
         // --- KHỞI TẠO BIỂU ĐỒ ---
@@ -218,10 +220,42 @@
 
         // --- LOGIC LỌC COMBOBOX ---
         const userDetails = {
-            bo: { name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-blue-800', apps: [{ name: 'Trình duyệt Web', percent: '40%' }, { name: 'Zalo', percent: '30%' }, { name: 'YouTube', percent: '20%' }] },
-            me: { name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân & Máy Bố', color: 'text-purple-800', apps: [{ name: 'Facebook', percent: '40%' }, { name: 'TikTok', percent: '35%' }, { name: 'Shopee', percent: '15%' }] },
-            khanh: { name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-green-800', apps: [{ name: 'YouTube', percent: '35%' }, { name: 'Trò chơi điện tử (Poki)', percent: '25%' }, { name: 'Duolingo', percent: '20%' }, { name: 'Zalo', percent: '10%' }, { name: 'Cuộc gọi/Tin nhắn', percent: '10%' }] },
-            linh: { name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-red-800', apps: [{ name: 'Facebook', percent: '30%' }, { name: 'Messenger', percent: '25%' }, { name: 'YouTube', percent: '20%' }, { name: 'Zalo', percent: '15%' }, { name: 'Duolingo', percent: '10%' }] }
+            bo: { 
+                name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-blue-800', 
+                apps: [
+                    { name: 'Trình duyệt Web', percent: '40%', icon: '🌐' }, 
+                    { name: 'Zalo', percent: '30%', icon: '💬' }, 
+                    { name: 'YouTube', percent: '20%', icon: '▶️' }
+                ] 
+            },
+            me: { 
+                name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân & Máy Bố', color: 'text-purple-800', 
+                apps: [
+                    { name: 'Facebook', percent: '40%', icon: '📘' }, 
+                    { name: 'TikTok', percent: '35%', icon: '🎵' }, 
+                    { name: 'Shopee', percent: '15%', icon: '🛍️' }
+                ] 
+            },
+            khanh: { 
+                name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-green-800', 
+                apps: [
+                    { name: 'YouTube', percent: '35%', icon: '▶️' }, 
+                    { name: 'Trò chơi điện tử', percent: '25%', icon: '🎮' }, 
+                    { name: 'Duolingo', percent: '20%', icon: '🦉' }, 
+                    { name: 'Zalo', percent: '10%', icon: '💬' }, 
+                    { name: 'Cuộc gọi/Tin nhắn', percent: '10%', icon: '📞' }
+                ] 
+            },
+            linh: { 
+                name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-red-800', 
+                apps: [
+                    { name: 'Facebook', percent: '30%', icon: '📘' }, 
+                    { name: 'Messenger', percent: '25%', icon: '💬' }, 
+                    { name: 'YouTube', percent: '20%', icon: '▶️' }, 
+                    { name: 'Zalo', percent: '15%', icon: '💬' }, 
+                    { name: 'Duolingo', percent: '10%', icon: '🦉' }
+                ] 
+            }
         };
 
         document.getElementById('userSelect').addEventListener('change', function(e) {
@@ -242,12 +276,17 @@
                 
                 let appsHtml = '';
                 user.apps.forEach(app => {
-                    appsHtml += `<tr><td class="border p-2 font-semibold text-gray-700">${app.name}</td><td class="border p-2 font-bold text-center w-24">${app.percent}</td></tr>`;
+                    appsHtml += `<tr>
+                                    <td class="border p-2 font-semibold text-gray-700 flex items-center gap-2">
+                                        <span class="text-xl">${app.icon}</span> ${app.name}
+                                    </td>
+                                    <td class="border p-2 font-bold text-center w-24 text-blue-900">${app.percent}</td>
+                                 </tr>`;
                 });
 
                 display.innerHTML = `
                     <div class="bg-gray-200 p-2 font-bold text-gray-800 uppercase text-center border-b border-gray-400">
-                        Hồ sơ viễn thông đối tượng
+                        Hồ sơ viễn thông cá nhân
                     </div>
                     <div class="p-4 flex flex-col md:flex-row gap-6">
                         <div class="w-full md:w-1/2">
@@ -300,7 +339,7 @@
                                     <span class="text-white text-xs">🚔</span>
                                 </div>
                             </div>
-                            <p class="text-sm font-bold text-red-700 mt-2 uppercase">YÊU CẦU ĐỐI TƯỢNG NGỪNG SỬ DỤNG THIẾT BỊ NGAY LẬP TỨC. XE ĐẶC CHỦNG ĐANG TRÊN ĐƯỜNG DI CHUYỂN!</p>
+                            <p class="text-sm font-bold text-red-700 mt-2 uppercase">YÊU CẦU CÁ NHÂN NGỪNG SỬ DỤNG THIẾT BỊ NGAY LẬP TỨC. XE ĐẶC CHỦNG ĐANG TRÊN ĐƯỜNG DI CHUYỂN!</p>
                         </div>
                     `;
                 } else {
