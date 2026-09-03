@@ -44,7 +44,7 @@
             <div id="policeWarningBox" class="hidden"></div>
         </div>
 
-        <!-- 2 BIỂU ĐỒ -->
+        <!-- 3 BIỂU ĐỒ -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Biểu đồ 1 -->
             <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-t-4 border-indigo-500">
@@ -59,6 +59,15 @@
                 <h2 class="text-lg md:text-xl font-bold text-center text-gray-800 mb-1">🔄 Phân bổ mượn thiết bị</h2>
                 <div class="relative h-[350px] w-full mt-4">
                     <canvas id="crossUsageChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Biểu đồ 3: Trải dài full màn hình (col-span-2) -->
+            <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-t-4 border-amber-500 lg:col-span-2">
+                <h2 class="text-lg md:text-xl font-bold text-center text-gray-800 mb-1">⏱️ Mật độ sử dụng trong ngày</h2>
+                <p class="text-xs text-center text-gray-500 mb-4">Đỉnh điểm thường rơi vào buổi trưa (11h-13h) và buổi tối (20h-22h)</p>
+                <div class="relative h-[300px] w-full">
+                    <canvas id="hourlyUsageChart"></canvas>
                 </div>
             </div>
         </div>
@@ -93,6 +102,7 @@
         };
 
         const baseUserLabels = ['Bố', 'Mẹ', 'Nhật Khánh', 'Nhật Linh'];
+        const hourlyLabels = ['8h-10h', '10h-12h', '12h-14h', '14h-16h', '16h-18h', '18h-20h', '20h-22h'];
 
         const originalDailyDatasets = [
             { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 3 },
@@ -108,7 +118,17 @@
             { label: 'Dùng máy cá nhân (Linh)', data: [0, 0, 0, 6], backgroundColor: colors.linh }
         ];
 
-        // --- KHỞI TẠO BIỂU ĐỒ ---
+        // Dữ liệu khung giờ (Đỉnh vào 12h-14h [index 2] và 20h-22h [index 6])
+        const originalHourlyDatasets = [
+            { id: 'bo', label: 'Bố', data: [0.2, 0.4, 1.2, 0.3, 0.5, 0.8, 1.6], borderColor: colors.bo, backgroundColor: colors.bo + '33', fill: true, tension: 0.4, borderWidth: 2 },
+            { id: 'me', label: 'Mẹ', data: [0.3, 0.8, 1.5, 0.4, 0.6, 1.2, 1.8], borderColor: colors.me, backgroundColor: colors.me + '33', fill: true, tension: 0.4, borderWidth: 2 },
+            { id: 'khanh', label: 'Nhật Khánh', data: [0.0, 0.1, 1.8, 0.0, 0.2, 1.4, 2.0], borderColor: colors.khanh, backgroundColor: colors.khanh + '33', fill: true, tension: 0.4, borderWidth: 2 },
+            { id: 'linh', label: 'Nhật Linh', data: [0.0, 0.2, 1.6, 0.1, 0.4, 1.5, 1.9], borderColor: colors.linh, backgroundColor: colors.linh + '33', fill: true, tension: 0.4, borderWidth: 2 }
+        ];
+
+
+        // --- KHỞI TẠO CÁC BIỂU ĐỒ ---
+        // Biểu đồ 1
         const ctxDaily = document.getElementById('dailyUsageChart').getContext('2d');
         const dailyChart = new Chart(ctxDaily, {
             type: 'line',
@@ -120,6 +140,7 @@
             }
         });
 
+        // Biểu đồ 2
         const ctxCross = document.getElementById('crossUsageChart').getContext('2d');
         const crossChart = new Chart(ctxCross, {
             type: 'bar',
@@ -127,6 +148,18 @@
             options: {
                 responsive: true, maintainAspectRatio: false,
                 scales: { x: { stacked: true }, y: { stacked: true } }
+            }
+        });
+
+        // Biểu đồ 3
+        const ctxHourly = document.getElementById('hourlyUsageChart').getContext('2d');
+        const hourlyChart = new Chart(ctxHourly, {
+            type: 'line',
+            data: { labels: hourlyLabels, datasets: JSON.parse(JSON.stringify(originalHourlyDatasets)) },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, max: 2.2, title: { display: true, text: 'Số giờ / 2 tiếng' } } },
+                plugins: { tooltip: { mode: 'index', intersect: false } }
             }
         });
 
@@ -157,7 +190,7 @@
             const warningBox = document.getElementById('policeWarningBox');
             
             if (val === 'all' || !val) {
-                // Ẩn bảng hiển thị và cảnh báo
+                // Ẩn thẻ & reset biểu đồ
                 display.classList.add('hidden');
                 display.classList.remove('grid');
                 warningBox.className = 'hidden';
@@ -165,6 +198,7 @@
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets));
                 crossChart.data.labels = baseUserLabels;
                 crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets));
+                hourlyChart.data.datasets = JSON.parse(JSON.stringify(originalHourlyDatasets));
             } else {
                 const user = userDetails[val];
                 
@@ -202,10 +236,8 @@
                 let isCritical = false;
                 
                 if (val === 'bo' || val === 'me') {
-                    // Random 50% - 70%
                     progress = Math.floor(Math.random() * (70 - 50 + 1)) + 50;
                 } else {
-                    // Random 90% - 97%
                     progress = Math.floor(Math.random() * (97 - 90 + 1)) + 90;
                     isCritical = true;
                 }
@@ -222,7 +254,6 @@
                     ? "Cảnh báo khẩn: Sắp vượt ngưỡng cho phép. Chỉ cần dùng thêm một chút nữa là xe thùng đến đón!"
                     : "Mức độ an toàn tạm thời. Cần làm gương cho các con nhé!";
                     
-                // Hiệu ứng nền nhấp nháy cho toàn khối nếu critical
                 let bgPulse = isCritical ? '<div class="absolute inset-0 bg-red-500 opacity-10 animate-pulse pointer-events-none"></div>' : '';
 
                 warningBox.className = boxClasses;
@@ -244,29 +275,29 @@
                     <p class="relative z-10 text-sm ${isCritical ? 'text-red-600' : 'text-orange-600'} mt-3 font-semibold">${warningMsg}</p>
                 `;
 
-                // Cập nhật Biểu đồ 1
+                // --- ĐỒNG BỘ 3 BIỂU ĐỒ ---
+                // Biểu đồ 1: Lọc
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets)).filter(ds => ds.id === val);
                 
-                // Cập nhật Biểu đồ 2: So sánh cặp
+                // Biểu đồ 2: Cặp
                 if (val === 'khanh' || val === 'linh') {
                     crossChart.data.labels = [baseUserLabels[2], baseUserLabels[3]];
-                    crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({
-                        ...ds,
-                        data: [ds.data[2], ds.data[3]]
-                    }));
+                    crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({ ...ds, data: [ds.data[2], ds.data[3]] }));
                 } else if (val === 'bo' || val === 'me') {
                     crossChart.data.labels = [baseUserLabels[0], baseUserLabels[1]];
-                    crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({
-                        ...ds,
-                        data: [ds.data[0], ds.data[1]]
-                    }));
+                    crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({ ...ds, data: [ds.data[0], ds.data[1]] }));
                 }
+
+                // Biểu đồ 3: Lọc
+                hourlyChart.data.datasets = JSON.parse(JSON.stringify(originalHourlyDatasets)).filter(ds => ds.id === val);
             }
             
             dailyChart.update();
             crossChart.update();
+            hourlyChart.update();
         });
 
+        // --- UPDATE TODAY BUTTON ---
         document.getElementById('refreshBtn').addEventListener('click', () => {
             dailyChart.data.datasets.forEach(dataset => {
                 const todayIndex = dataset.data.length - 1;
