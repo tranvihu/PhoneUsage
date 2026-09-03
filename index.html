@@ -69,132 +69,66 @@
 
                 <!-- CẢNH BÁO LÊN ĐỒN CÔNG AN -->
                 <div id="policeWarningBox" class="hidden mt-6"></div>
+
+                <!-- KHU VỰC BÁO CÁO & HÌNH PHẠT (ĐÃ DI CHUYỂN LÊN TRÊN) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                    
+                    <!-- Báo cáo hành vi vi phạm (Thay đổi theo user) -->
+                    <div class="panel border-orange-600 hidden" id="violationPanel">
+                        <div class="panel-header bg-orange-700 flex items-center">
+                            <span class="mr-2">📋</span> HỒ SƠ LƯU TRỮ HÀNH VI VI PHẠM
+                        </div>
+                        <div class="p-4 bg-orange-50 h-full">
+                            <ul id="violationList" class="list-disc pl-5 space-y-3 text-orange-900 font-medium">
+                                <!-- Sẽ được điền bằng JS -->
+                            </ul>
+                            <div class="mt-4 pt-4 border-t border-orange-300 text-xs font-bold text-orange-800 uppercase">
+                                Trạng thái hồ sơ: Đang chờ xử lý & chuyển sang khung hình phạt.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Khung Hình Phạt Mặc Định (Luôn hiện) -->
+                    <div class="panel border-black" id="penaltyPanel">
+                        <div class="panel-header bg-black flex items-center">
+                            <span class="mr-2">⚖️</span> BỘ LUẬT XỬ LÝ KỶ LUẬT GIA ĐÌNH
+                        </div>
+                        <div class="p-4 bg-gray-100 h-full">
+                            <table class="w-full text-sm border-collapse border border-gray-400 bg-white shadow-sm">
+                                <thead class="bg-gray-800 text-white">
+                                    <tr>
+                                        <th class="border border-gray-400 p-2 text-left">Hành vi vi phạm</th>
+                                        <th class="border border-gray-400 p-2 text-left w-1/2">Khung hình phạt (Tích lũy)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-800">
+                                    <tr>
+                                        <td class="border border-gray-400 p-2 font-semibold">Xem điện thoại > 3 giờ/ngày</td>
+                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Úp mặt vào góc tường 30 phút. Tịch thu máy 1 tuần.</td>
+                                    </tr>
+                                    <tr class="bg-gray-50">
+                                        <td class="border border-gray-400 p-2 font-semibold">Lén lút dùng trong giờ nghỉ trưa</td>
+                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Chịu 3 roi vào mông. Viết bản kiểm điểm 2 trang.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-400 p-2 font-semibold">Lười biếng, đến giờ không chịu đi tắm</td>
+                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Cắt toàn bộ giờ giải trí. Quét nhà 3 ngày liên tiếp.</td>
+                                    </tr>
+                                    <tr class="bg-gray-50">
+                                        <td class="border border-gray-400 p-2 font-semibold text-red-600">Vượt ngưỡng 90% (Cảnh báo Đỏ)</td>
+                                        <td class="border border-gray-400 p-2 text-black font-black uppercase">Chuyển hồ sơ sang Đồn CA. Gửi công văn hạ thi đua về Ban Giám Hiệu.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
         <!-- CÁC BIỂU ĐỒ & BẢN ĐỒ -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            <!-- Biểu đồ 1 -->
-            <div class="panel">
-                <div class="panel-header">📈 Biểu đồ tần suất hoạt động (7 ngày)</div>
-                <div class="p-4 h-[320px] bg-white">
-                    <canvas id="dailyUsageChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Biểu đồ 2 -->
-            <div class="panel">
-                <div class="panel-header">🔄 Trao đổi & mượn thiết bị liên đới</div>
-                <div class="p-4 h-[320px] bg-white">
-                    <canvas id="crossUsageChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Biểu đồ 3 -->
-            <div class="panel">
-                <div class="panel-header">⏱️ Mật độ trực tuyến theo khung giờ</div>
-                <div class="p-4 h-[320px] bg-white">
-                    <canvas id="hourlyUsageChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Bản Đồ Công An (THỰC TẾ) -->
-            <div class="panel border-red-700">
-                <div class="panel-header danger flex justify-between items-center">
-                    <span>🚨 ĐƠN VỊ PHỤ TRÁCH ĐỊA BÀN & ĐỊNH VỊ GPS</span>
-                    <span class="animate-pulse w-3 h-3 bg-red-500 rounded-full border border-white"></span>
-                </div>
-                <div class="p-4 bg-gray-50">
-                    <!-- Bản đồ thực tế (Leaflet) -->
-                    <div id="realMap" class="h-48 rounded border-2 border-gray-400 mb-4 z-0 shadow-inner"></div>
-
-                    <!-- Bảng thông tin -->
-                    <table class="gov-table w-full text-sm">
-                        <tbody>
-                            <tr>
-                                <th class="w-1/3">Cán bộ phụ trách:</th>
-                                <td class="font-bold text-gray-800 text-base uppercase">Đ/c Thành</td>
-                            </tr>
-                            <tr>
-                                <th class="text-blue-900">Địa chỉ giám sát:</th>
-                                <td id="targetAddress" class="font-bold text-gray-800 text-xs italic text-blue-700">Đang khởi động hệ thống định vị vệ tinh GPS...</td>
-                            </tr>
-                            <tr>
-                                <th class="text-red-800">Trụ sở Công An:</th>
-                                <td id="policeAddress" class="font-bold text-gray-800 text-xs text-red-700">Đang quét khu vực lân cận...</td>
-                            </tr>
-                            <tr>
-                                <th>SĐT Liên hệ trực tiếp:</th>
-                                <td class="font-bold text-blue-800 text-lg">0988.113.113</td>
-                            </tr>
-                            <tr>
-                                <th class="text-red-700">Đường dây nóng:</th>
-                                <td class="font-black text-red-600 text-xl tracking-widest animate-pulse">113</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- KHU VỰC BÁO CÁO & HÌNH PHẠT -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-            
-            <!-- Báo cáo hành vi vi phạm (Thay đổi theo user) -->
-            <div class="panel border-orange-600 hidden" id="violationPanel">
-                <div class="panel-header bg-orange-700 flex items-center">
-                    <span class="mr-2">📋</span> HỒ SƠ LƯU TRỮ HÀNH VI VI PHẠM
-                </div>
-                <div class="p-4 bg-orange-50 h-full">
-                    <ul id="violationList" class="list-disc pl-5 space-y-3 text-orange-900 font-medium">
-                        <!-- Sẽ được điền bằng JS -->
-                    </ul>
-                    <div class="mt-4 pt-4 border-t border-orange-300 text-xs font-bold text-orange-800 uppercase">
-                        Trạng thái hồ sơ: Đang chờ xử lý & chuyển sang khung hình phạt.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Khung Hình Phạt Mặc Định (Luôn hiện) -->
-            <div class="panel border-black" id="penaltyPanel">
-                <div class="panel-header bg-black flex items-center">
-                    <span class="mr-2">⚖️</span> BỘ LUẬT XỬ LÝ KỶ LUẬT GIA ĐÌNH
-                </div>
-                <div class="p-4 bg-gray-100 h-full">
-                    <table class="w-full text-sm border-collapse border border-gray-400 bg-white shadow-sm">
-                        <thead class="bg-gray-800 text-white">
-                            <tr>
-                                <th class="border border-gray-400 p-2 text-left">Hành vi vi phạm</th>
-                                <th class="border border-gray-400 p-2 text-left w-1/2">Khung hình phạt (Tích lũy)</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-gray-800">
-                            <tr>
-                                <td class="border border-gray-400 p-2 font-semibold">Xem điện thoại > 3 giờ/ngày</td>
-                                <td class="border border-gray-400 p-2 text-red-700 font-bold">Úp mặt vào góc tường 30 phút. Tịch thu máy 1 tuần.</td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td class="border border-gray-400 p-2 font-semibold">Lén lút dùng trong giờ nghỉ trưa</td>
-                                <td class="border border-gray-400 p-2 text-red-700 font-bold">Chịu 3 roi vào mông. Viết bản kiểm điểm 2 trang.</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-400 p-2 font-semibold">Lười biếng, đến giờ không chịu đi tắm</td>
-                                <td class="border border-gray-400 p-2 text-red-700 font-bold">Cắt toàn bộ giờ giải trí. Quét nhà 3 ngày liên tiếp.</td>
-                            </tr>
-                            <tr class="bg-gray-50">
-                                <td class="border border-gray-400 p-2 font-semibold text-red-600">Vượt ngưỡng 90% (Cảnh báo Đỏ)</td>
-                                <td class="border border-gray-400 p-2 text-black font-black uppercase">Chuyển hồ sơ sang Đồn CA. Gửi công văn hạ thi đua về Ban Giám Hiệu.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-        </div>
-
-        <!-- Nút Refresh -->
         <div class="flex justify-center mt-6">
             <button id="refreshBtn" class="bg-blue-900 hover:bg-blue-800 text-white font-bold uppercase tracking-wider py-3 px-8 border-2 border-blue-950 shadow-md transition-colors flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -344,24 +278,12 @@
         });
 
 
-        // --- LOGIC LỌC COMBOBOX VÀ RANDOM APP ---
+        // --- LOGIC LỌC COMBOBOX VÀ RANDOM DATA ---
         const userDetails = {
-            bo: { 
-                name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-blue-800', 
-                violations: ["Thức khuya đọc báo qua 23h đêm", "Sử dụng điện thoại trong bữa ăn"]
-            },
-            me: { 
-                name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân & Máy Bố', color: 'text-purple-800', 
-                violations: ["Lướt TikTok âm lượng lớn", "Mua sắm online vượt chỉ tiêu", "Vừa sạc vừa dùng điện thoại"]
-            },
-            khanh: { 
-                name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-green-800', 
-                violations: ["Xem YouTube lén lúc nghỉ trưa", "Đến giờ không chịu đi tắm", "Chơi game quá 60 phút không nghỉ mắt"]
-            },
-            linh: { 
-                name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-red-800', 
-                violations: ["Vừa ăn cơm vừa dán mắt vào màn hình", "Giành điện thoại của anh", "Gọi điện thoại buôn chuyện quá lâu"]
-            }
+            bo: { name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-blue-800' },
+            me: { name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân & Máy Bố', color: 'text-purple-800' },
+            khanh: { name: 'Nhật Khánh (Em trai)', totalTime: '18.7 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-green-800' },
+            linh: { name: 'Nhật Linh (Chị gái)', totalTime: '20.8 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-red-800' }
         };
 
         const allPlatforms = [
@@ -376,14 +298,39 @@
             { id: 'call', name: 'Cuộc gọi/Tin nhắn', icon: '📞' }
         ];
 
+        const violationsData = {
+            adult: [
+                "Thức khuya đọc báo qua 23h đêm", "Sử dụng điện thoại trong bữa ăn", "Lướt TikTok âm lượng lớn", 
+                "Mua sắm online vượt chỉ tiêu", "Vừa sạc vừa dùng điện thoại", "Bỏ quên việc nhà vì mải xem Facebook"
+            ],
+            khanh: [
+                "Xem YouTube lén lúc nghỉ trưa", "Đến giờ không chịu đi tắm", "Chơi game quá 60 phút không nghỉ mắt", 
+                "Giành điện thoại của chị gái", "Nằm xem điện thoại sát mắt", "Vừa ăn cơm vừa đòi xem YouTube"
+            ],
+            linh: [
+                "Gọi điện thoại buôn chuyện quá lâu", "Tranh giành iPad với em trai", "Lén dùng TikTok của mẹ", 
+                "Vừa làm bài tập vừa nhắn tin", "Không chịu nhường em chơi cùng", "Để âm lượng quá lớn khi xem video"
+            ]
+        };
+
+        function getRandomViolations(userId) {
+            let pool = [];
+            if (userId === 'bo' || userId === 'me') pool = violationsData.adult;
+            else if (userId === 'khanh') pool = violationsData.khanh;
+            else pool = violationsData.linh;
+
+            // Random 2 đến 3 lỗi
+            let count = Math.floor(Math.random() * 2) + 2;
+            let shuffled = pool.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
         function getRandomApps(userId) {
             let weights = {};
             if (userId === 'khanh' || userId === 'linh') {
-                // Trẻ em: xem nhiều youtube, game, tiktok, duolingo. Không dùng web, facebook, zalo, shopee.
                 weights = { youtube: 40, game: 30, tiktok: 20, duolingo: 10, facebook: 0, zalo: 0, web: 0, shopee: 0, call: 0 };
                 if (userId === 'linh') { weights.facebook = 15; weights.game = 10; weights.call = 5; }
             } else {
-                // Người lớn: dùng đa dạng
                 weights = { youtube: 15, facebook: 30, zalo: 20, web: 20, tiktok: 10, shopee: 10, call: 5, game: 0, duolingo: 0 };
                 if (userId === 'me') { weights.shopee = 35; weights.tiktok = 25; }
                 if (userId === 'bo') { weights.web = 40; weights.shopee = 0; weights.tiktok = 0; }
@@ -391,7 +338,6 @@
 
             let appData = allPlatforms.map(app => {
                 let baseW = weights[app.id];
-                // Random lệch +- 5 đơn vị nếu có dùng
                 let val = baseW > 0 ? baseW + (Math.random() * 10 - 5) : 0; 
                 return { ...app, val: Math.max(0, val) };
             });
@@ -403,14 +349,12 @@
                 return { ...app, percent: pct };
             });
 
-            // Đảm bảo tổng chính xác = 100%
             let actualSum = appData.reduce((sum, app) => sum + app.percent, 0);
             if (actualSum > 0 && actualSum !== 100) {
                 appData.sort((a,b) => b.percent - a.percent);
                 appData[0].percent += (100 - actualSum);
             }
 
-            // Sắp xếp giảm dần theo phần trăm để hiển thị
             return appData.sort((a, b) => b.percent - a.percent);
         }
 
@@ -433,9 +377,10 @@
             } else {
                 const user = userDetails[val];
                 
-                // Hiển thị báo cáo vi phạm
+                // Hiển thị báo cáo vi phạm random
+                const randomViolations = getRandomViolations(val);
                 violationPanel.classList.remove('hidden');
-                violationList.innerHTML = user.violations.map(v => `<li>⚠️ ${v}</li>`).join('');
+                violationList.innerHTML = randomViolations.map(v => `<li>⚠️ ${v}</li>`).join('');
                 
                 // Random app data
                 const randomApps = getRandomApps(val);
