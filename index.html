@@ -24,6 +24,8 @@
                     </label>
                     <select id="userSelect" class="block w-full px-4 py-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg border bg-gray-50 cursor-pointer shadow-sm">
                         <option value="all">-- Tất cả gia đình --</option>
+                        <option value="bo">Bố</option>
+                        <option value="me">Mẹ</option>
                         <option value="khanh">Nhật Khánh</option>
                         <option value="linh">Nhật Linh</option>
                     </select>
@@ -81,7 +83,7 @@
         const daysLabels = getLast7Days();
 
         const colors = {
-            bo: '#94a3b8',    // Xám nhạt
+            bo: '#64748b',    // Xám đậm
             me: '#94a3b8',    // Xám nhạt
             khanh: '#3b82f6', // Xanh dương
             linh: '#ec4899'   // Hồng
@@ -90,8 +92,8 @@
         const baseUserLabels = ['Bố', 'Mẹ', 'Nhật Khánh', 'Nhật Linh'];
 
         const originalDailyDatasets = [
-            { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 2, borderDash: [5, 5] },
-            { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.4, borderWidth: 2, borderDash: [5, 5] },
+            { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 3, borderDash: [5, 5] },
+            { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.4, borderWidth: 3, borderDash: [5, 5] },
             { id: 'khanh', label: 'Nhật Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.4, borderWidth: 4 },
             { id: 'linh', label: 'Nhật Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.4, borderWidth: 4 }
         ];
@@ -103,7 +105,7 @@
             { label: 'Dùng máy cá nhân (Linh)', data: [0, 0, 0, 6], backgroundColor: colors.linh }
         ];
 
-        // --- KHỞI TẠO BIỂU ĐỒ 1 ---
+        // --- KHỞI TẠO BIỂU ĐỒ ---
         const ctxDaily = document.getElementById('dailyUsageChart').getContext('2d');
         const dailyChart = new Chart(ctxDaily, {
             type: 'line',
@@ -115,7 +117,6 @@
             }
         });
 
-        // --- KHỞI TẠO BIỂU ĐỒ 2 ---
         const ctxCross = document.getElementById('crossUsageChart').getContext('2d');
         const crossChart = new Chart(ctxCross, {
             type: 'bar',
@@ -129,13 +130,24 @@
 
         // --- LOGIC LỌC COMBOBOX & DỮ LIỆU APP ---
         const userDetails = {
+            bo: {
+                name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Chỉ dùng máy cá nhân', color: 'text-slate-700', bgColor: 'bg-slate-100', icon: '👨',
+                apps: [
+                    { name: 'Đọc báo / Web', percent: '40%' },
+                    { name: 'Zalo', percent: '30%' },
+                    { name: 'YouTube', percent: '20%' }
+                ]
+            },
+            me: {
+                name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Dùng máy cá nhân, đôi khi mượn Bố', color: 'text-slate-600', bgColor: 'bg-slate-50', icon: '👩',
+                apps: [
+                    { name: 'Facebook', percent: '40%' },
+                    { name: 'TikTok', percent: '35%' },
+                    { name: 'Shopee', percent: '15%' }
+                ]
+            },
             khanh: {
-                name: 'Nhật Khánh', 
-                totalTime: '18.7 giờ', 
-                favoriteDevice: 'Thường mượn điện thoại Mẹ', 
-                color: 'text-blue-600', 
-                bgColor: 'bg-blue-50', 
-                icon: '👦',
+                name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Thường mượn điện thoại Mẹ', color: 'text-blue-600', bgColor: 'bg-blue-50', icon: '👦',
                 apps: [
                     { name: 'YouTube', percent: '35%' },
                     { name: 'Poki (Game)', percent: '25%' },
@@ -145,12 +157,7 @@
                 ]
             },
             linh: {
-                name: 'Nhật Linh', 
-                totalTime: '20.8 giờ', 
-                favoriteDevice: 'Thường mượn điện thoại Mẹ', 
-                color: 'text-pink-600', 
-                bgColor: 'bg-pink-50', 
-                icon: '👧',
+                name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Thường mượn điện thoại Mẹ', color: 'text-pink-600', bgColor: 'bg-pink-50', icon: '👧',
                 apps: [
                     { name: 'Facebook', percent: '30%' },
                     { name: 'Messenger', percent: '25%' },
@@ -203,13 +210,25 @@
                 display.classList.remove('hidden');
                 display.classList.add('grid');
 
+                // Cập nhật Biểu đồ 1: Chỉ đường của người được chọn
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets)).filter(ds => ds.id === val);
-                const targetIndex = val === 'khanh' ? 2 : 3;
-                crossChart.data.labels = [baseUserLabels[targetIndex]];
-                crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({
-                    ...ds,
-                    data: [ds.data[targetIndex]]
-                }));
+                
+                // Cập nhật Biểu đồ 2: So sánh cặp
+                if (val === 'khanh' || val === 'linh') {
+                    // Hiển thị cả Khánh và Linh
+                    crossChart.data.labels = [baseUserLabels[2], baseUserLabels[3]];
+                    crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({
+                        ...ds,
+                        data: [ds.data[2], ds.data[3]]
+                    }));
+                } else if (val === 'bo' || val === 'me') {
+                    // Hiển thị cả Bố và Mẹ
+                    crossChart.data.labels = [baseUserLabels[0], baseUserLabels[1]];
+                    crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({
+                        ...ds,
+                        data: [ds.data[0], ds.data[1]]
+                    }));
+                }
             }
             
             dailyChart.update();
