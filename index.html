@@ -14,21 +14,6 @@
             <p class="text-gray-500">Phân tích chi tiết thói quen dùng điện thoại của gia đình</p>
         </div>
 
-        <!-- CẢNH BÁO LÊN ĐỒN CÔNG AN -->
-        <div class="bg-red-50 rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-red-500">
-            <div class="flex justify-between items-end mb-2">
-                <h3 class="text-lg font-bold text-red-700 flex items-center">
-                    <svg class="w-6 h-6 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    Nguy Cơ Mời Lên Đồn Công An (Vì dùng ĐT quá nhiều)
-                </h3>
-                <span class="text-red-700 font-bold">95%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 h-4 rounded-full" style="width: 95%"></div>
-            </div>
-            <p class="text-sm text-red-600 mt-2 font-semibold">Cảnh báo: Sắp vượt ngưỡng cho phép. Chỉ cần dùng thêm một chút nữa là xe thùng đến đón!</p>
-        </div>
-
         <!-- BẢNG ĐIỀU KHIỂN & COMBOBOX -->
         <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-yellow-400">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -54,6 +39,9 @@
             <div id="userInfoDisplay" class="mt-6 hidden grid-cols-1 md:grid-cols-3 gap-4 transition-all duration-300 border-t pt-6">
                 <!-- Data will be injected here -->
             </div>
+
+            <!-- CẢNH BÁO LÊN ĐỒN CÔNG AN (Chỉ hiện khi chọn người) -->
+            <div id="policeWarningBox" class="hidden"></div>
         </div>
 
         <!-- 2 BIỂU ĐỒ -->
@@ -97,7 +85,6 @@
         };
         const daysLabels = getLast7Days();
 
-        // Đã thay đổi màu sắc rực rỡ và rõ ràng hơn cho Bố và Mẹ
         const colors = {
             bo: '#16a34a',    // Xanh lá đậm
             me: '#9333ea',    // Tím
@@ -107,12 +94,11 @@
 
         const baseUserLabels = ['Bố', 'Mẹ', 'Nhật Khánh', 'Nhật Linh'];
 
-        // Đã bỏ borderDash (viền nét đứt) để các đường của bố mẹ trở nên sắc nét như của con cái
         const originalDailyDatasets = [
             { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 3 },
             { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.4, borderWidth: 3 },
-            { id: 'khanh', label: 'Nhật Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.4, borderWidth: 4 },
-            { id: 'linh', label: 'Nhật Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.4, borderWidth: 4 }
+            { id: 'khanh', label: 'Nhật Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.4, borderWidth: 3 },
+            { id: 'linh', label: 'Nhật Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.4, borderWidth: 3 }
         ];
 
         const originalCrossDatasets = [
@@ -149,49 +135,33 @@
         const userDetails = {
             bo: {
                 name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Chỉ dùng máy cá nhân', color: 'text-green-700', bgColor: 'bg-green-50', icon: '👨',
-                apps: [
-                    { name: 'Đọc báo / Web', percent: '40%' },
-                    { name: 'Zalo', percent: '30%' },
-                    { name: 'YouTube', percent: '20%' }
-                ]
+                apps: [{ name: 'Đọc báo / Web', percent: '40%' }, { name: 'Zalo', percent: '30%' }, { name: 'YouTube', percent: '20%' }]
             },
             me: {
                 name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Dùng máy cá nhân, đôi khi mượn Bố', color: 'text-purple-600', bgColor: 'bg-purple-50', icon: '👩',
-                apps: [
-                    { name: 'Facebook', percent: '40%' },
-                    { name: 'TikTok', percent: '35%' },
-                    { name: 'Shopee', percent: '15%' }
-                ]
+                apps: [{ name: 'Facebook', percent: '40%' }, { name: 'TikTok', percent: '35%' }, { name: 'Shopee', percent: '15%' }]
             },
             khanh: {
                 name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Thường mượn điện thoại Mẹ', color: 'text-blue-600', bgColor: 'bg-blue-50', icon: '👦',
-                apps: [
-                    { name: 'YouTube', percent: '35%' },
-                    { name: 'Poki (Game)', percent: '25%' },
-                    { name: 'Duolingo', percent: '20%' },
-                    { name: 'Zalo', percent: '10%' },
-                    { name: 'Phone / Message', percent: '10%' }
-                ]
+                apps: [{ name: 'YouTube', percent: '35%' }, { name: 'Poki (Game)', percent: '25%' }, { name: 'Duolingo', percent: '20%' }, { name: 'Zalo', percent: '10%' }, { name: 'Phone / Message', percent: '10%' }]
             },
             linh: {
                 name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Thường mượn điện thoại Mẹ', color: 'text-pink-600', bgColor: 'bg-pink-50', icon: '👧',
-                apps: [
-                    { name: 'Facebook', percent: '30%' },
-                    { name: 'Messenger', percent: '25%' },
-                    { name: 'YouTube', percent: '20%' },
-                    { name: 'Zalo', percent: '15%' },
-                    { name: 'Duolingo', percent: '10%' }
-                ]
+                apps: [{ name: 'Facebook', percent: '30%' }, { name: 'Messenger', percent: '25%' }, { name: 'YouTube', percent: '20%' }, { name: 'Zalo', percent: '15%' }, { name: 'Duolingo', percent: '10%' }]
             }
         };
 
         document.getElementById('userSelect').addEventListener('change', function(e) {
             const val = e.target.value;
             const display = document.getElementById('userInfoDisplay');
+            const warningBox = document.getElementById('policeWarningBox');
             
             if (val === 'all' || !val) {
+                // Ẩn bảng hiển thị và cảnh báo
                 display.classList.add('hidden');
                 display.classList.remove('grid');
+                warningBox.className = 'hidden';
+                
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets));
                 crossChart.data.labels = baseUserLabels;
                 crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets));
@@ -227,19 +197,64 @@
                 display.classList.remove('hidden');
                 display.classList.add('grid');
 
-                // Cập nhật Biểu đồ 1: Chỉ đường của người được chọn
+                // TÍNH TOÁN & HIỂN THỊ CẢNH BÁO XE THÙNG CÔNG AN
+                let progress = 0;
+                let isCritical = false;
+                
+                if (val === 'bo' || val === 'me') {
+                    // Random 50% - 70%
+                    progress = Math.floor(Math.random() * (70 - 50 + 1)) + 50;
+                } else {
+                    // Random 90% - 97%
+                    progress = Math.floor(Math.random() * (97 - 90 + 1)) + 90;
+                    isCritical = true;
+                }
+
+                let boxClasses = isCritical 
+                    ? "mt-6 bg-red-50 rounded-2xl shadow-lg p-4 md:p-6 border-2 border-red-500 transition-all duration-300 relative overflow-hidden" 
+                    : "mt-6 bg-orange-50 rounded-2xl shadow-lg p-4 md:p-6 border-2 border-orange-300 transition-all duration-300 relative overflow-hidden";
+
+                let barGradient = isCritical
+                    ? "from-yellow-400 via-orange-500 to-red-600"
+                    : "from-green-400 via-yellow-400 to-orange-500";
+                    
+                let warningMsg = isCritical 
+                    ? "Cảnh báo khẩn: Sắp vượt ngưỡng cho phép. Chỉ cần dùng thêm một chút nữa là xe thùng đến đón!"
+                    : "Mức độ an toàn tạm thời. Cần làm gương cho các con nhé!";
+                    
+                // Hiệu ứng nền nhấp nháy cho toàn khối nếu critical
+                let bgPulse = isCritical ? '<div class="absolute inset-0 bg-red-500 opacity-10 animate-pulse pointer-events-none"></div>' : '';
+
+                warningBox.className = boxClasses;
+                warningBox.innerHTML = `
+                    ${bgPulse}
+                    <div class="relative z-10 flex justify-between items-end mb-2">
+                        <h3 class="text-lg font-bold ${isCritical ? 'text-red-700' : 'text-orange-700'} flex items-center">
+                            <svg class="w-6 h-6 mr-2 ${isCritical ? 'animate-pulse' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Nguy Cơ Mời Lên Đồn Công An
+                        </h3>
+                        <div class="flex items-center">
+                            <span class="text-3xl mr-2 animate-bounce">🚓</span>
+                            <span class="${isCritical ? 'text-red-700' : 'text-orange-700'} font-black text-2xl drop-shadow-md">${progress}%</span>
+                        </div>
+                    </div>
+                    <div class="relative z-10 w-full bg-gray-200 rounded-full h-4 shadow-inner overflow-hidden">
+                        <div class="bg-gradient-to-r ${barGradient} h-4 rounded-full transition-all duration-1000 ease-out" style="width: ${progress}%"></div>
+                    </div>
+                    <p class="relative z-10 text-sm ${isCritical ? 'text-red-600' : 'text-orange-600'} mt-3 font-semibold">${warningMsg}</p>
+                `;
+
+                // Cập nhật Biểu đồ 1
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets)).filter(ds => ds.id === val);
                 
                 // Cập nhật Biểu đồ 2: So sánh cặp
                 if (val === 'khanh' || val === 'linh') {
-                    // Hiển thị cả Khánh và Linh
                     crossChart.data.labels = [baseUserLabels[2], baseUserLabels[3]];
                     crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({
                         ...ds,
                         data: [ds.data[2], ds.data[3]]
                     }));
                 } else if (val === 'bo' || val === 'me') {
-                    // Hiển thị cả Bố và Mẹ
                     crossChart.data.labels = [baseUserLabels[0], baseUserLabels[1]];
                     crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({
                         ...ds,
