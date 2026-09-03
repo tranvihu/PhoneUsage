@@ -104,9 +104,22 @@
                 </div>
                 <div class="p-4 bg-gray-50">
                     <!-- Bản đồ giả lập -->
-                    <div class="bg-gray-300 h-32 rounded flex flex-col items-center justify-center border-2 border-gray-400 mb-4 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1 25%, transparent 25%, transparent 75%, #cbd5e1 75%, #cbd5e1), repeating-linear-gradient(45deg, #cbd5e1 25%, #e2e8f0 25%, #e2e8f0 75%, #cbd5e1 75%, #cbd5e1); background-size: 20px 20px;">
-                        <span class="text-4xl drop-shadow-md relative z-10 animate-bounce">📍</span>
-                        <div class="bg-white px-2 py-1 border border-black font-bold text-xs uppercase shadow relative z-10 mt-1">Trụ Sở Công An Phường</div>
+                    <div class="bg-gray-300 h-32 rounded flex items-center justify-between px-8 md:px-16 border-2 border-gray-400 mb-4 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1 25%, transparent 25%, transparent 75%, #cbd5e1 75%, #cbd5e1), repeating-linear-gradient(45deg, #cbd5e1 25%, #e2e8f0 25%, #e2e8f0 75%, #cbd5e1 75%, #cbd5e1); background-size: 20px 20px;">
+                        
+                        <!-- Connecting Line -->
+                        <div class="absolute inset-x-8 md:inset-x-16 top-1/2 h-0 border-t-2 border-dashed border-red-500 transform -translate-y-1/2 z-0 opacity-70"></div>
+                        
+                        <!-- Family Pin -->
+                        <div class="relative z-10 flex flex-col items-center">
+                            <span class="text-4xl drop-shadow-md">🏠</span>
+                            <div class="bg-blue-900 text-white px-2 py-1 border border-black font-bold text-[10px] uppercase shadow mt-1">Nơi cư trú</div>
+                        </div>
+
+                        <!-- Police Pin -->
+                        <div class="relative z-10 flex flex-col items-center">
+                            <span class="text-4xl drop-shadow-md animate-bounce">📍</span>
+                            <div class="bg-white text-red-700 px-2 py-1 border border-black font-bold text-[10px] uppercase shadow mt-1">Trụ sở Công An</div>
+                        </div>
                     </div>
 
                     <!-- Bảng thông tin -->
@@ -117,16 +130,20 @@
                                 <td class="font-bold text-gray-800 text-base uppercase">Đ/c Thành</td>
                             </tr>
                             <tr>
+                                <th class="text-blue-900">Địa chỉ mục tiêu:</th>
+                                <td class="font-bold text-gray-800 text-xs">Số 123, Đường Hạnh Phúc</td>
+                            </tr>
+                            <tr>
+                                <th class="text-red-800">Trụ sở Công An:</th>
+                                <td class="font-bold text-gray-800 text-xs">Số 456, Đường An Ninh (Cách 500m)</td>
+                            </tr>
+                            <tr>
                                 <th>SĐT Liên hệ trực tiếp:</th>
                                 <td class="font-bold text-blue-800 text-lg">0988.113.113</td>
                             </tr>
                             <tr>
                                 <th class="text-red-700">Đường dây nóng:</th>
                                 <td class="font-black text-red-600 text-xl tracking-widest animate-pulse">113</td>
-                            </tr>
-                            <tr>
-                                <th>Chỉ đạo tác chiến:</th>
-                                <td class="text-xs text-gray-600 font-semibold italic">Điều động xe chuyên dụng khi thời lượng vượt ngưỡng 90%.</td>
                             </tr>
                         </tbody>
                     </table>
