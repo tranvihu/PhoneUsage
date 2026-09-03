@@ -139,6 +139,61 @@
 
         </div>
 
+        <!-- KHU VỰC BÁO CÁO & HÌNH PHẠT -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            
+            <!-- Báo cáo hành vi vi phạm (Thay đổi theo user) -->
+            <div class="panel border-orange-600 hidden" id="violationPanel">
+                <div class="panel-header bg-orange-700 flex items-center">
+                    <span class="mr-2">📋</span> HỒ SƠ LƯU TRỮ HÀNH VI VI PHẠM
+                </div>
+                <div class="p-4 bg-orange-50 h-full">
+                    <ul id="violationList" class="list-disc pl-5 space-y-3 text-orange-900 font-medium">
+                        <!-- Sẽ được điền bằng JS -->
+                    </ul>
+                    <div class="mt-4 pt-4 border-t border-orange-300 text-xs font-bold text-orange-800 uppercase">
+                        Trạng thái hồ sơ: Đang chờ xử lý & chuyển sang khung hình phạt.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khung Hình Phạt Mặc Định (Luôn hiện) -->
+            <div class="panel border-black" id="penaltyPanel">
+                <div class="panel-header bg-black flex items-center">
+                    <span class="mr-2">⚖️</span> BỘ LUẬT XỬ LÝ KỶ LUẬT GIA ĐÌNH
+                </div>
+                <div class="p-4 bg-gray-100 h-full">
+                    <table class="w-full text-sm border-collapse border border-gray-400 bg-white shadow-sm">
+                        <thead class="bg-gray-800 text-white">
+                            <tr>
+                                <th class="border border-gray-400 p-2 text-left">Hành vi vi phạm</th>
+                                <th class="border border-gray-400 p-2 text-left w-1/2">Khung hình phạt (Tích lũy)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-800">
+                            <tr>
+                                <td class="border border-gray-400 p-2 font-semibold">Xem điện thoại > 3 giờ/ngày</td>
+                                <td class="border border-gray-400 p-2 text-red-700 font-bold">Úp mặt vào góc tường 30 phút. Tịch thu máy 1 tuần.</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-400 p-2 font-semibold">Lén lút dùng trong giờ nghỉ trưa</td>
+                                <td class="border border-gray-400 p-2 text-red-700 font-bold">Chịu 3 roi vào mông. Viết bản kiểm điểm 2 trang.</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-400 p-2 font-semibold">Lười biếng, đến giờ không chịu đi tắm</td>
+                                <td class="border border-gray-400 p-2 text-red-700 font-bold">Cắt toàn bộ giờ giải trí. Quét nhà 3 ngày liên tiếp.</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-400 p-2 font-semibold text-red-600">Vượt ngưỡng 90% (Cảnh báo Đỏ)</td>
+                                <td class="border border-gray-400 p-2 text-black font-black uppercase">Chuyển hồ sơ sang Đồn CA. Gửi công văn hạ thi đua về Ban Giám Hiệu.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+
         <!-- Nút Refresh -->
         <div class="flex justify-center mt-6">
             <button id="refreshBtn" class="bg-blue-900 hover:bg-blue-800 text-white font-bold uppercase tracking-wider py-3 px-8 border-2 border-blue-950 shadow-md transition-colors flex items-center">
@@ -297,7 +352,8 @@
                     { name: 'Trình duyệt Web', percent: '40%', icon: '🌐' }, 
                     { name: 'Zalo', percent: '30%', icon: '💬' }, 
                     { name: 'YouTube', percent: '20%', icon: '▶️' }
-                ] 
+                ],
+                violations: ["Thức khuya đọc báo qua 23h đêm", "Sử dụng điện thoại trong bữa ăn"]
             },
             me: { 
                 name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân & Máy Bố', color: 'text-purple-800', 
@@ -305,7 +361,8 @@
                     { name: 'Facebook', percent: '40%', icon: '📘' }, 
                     { name: 'TikTok', percent: '35%', icon: '🎵' }, 
                     { name: 'Shopee', percent: '15%', icon: '🛍️' }
-                ] 
+                ],
+                violations: ["Lướt TikTok âm lượng lớn", "Mua sắm online vượt chỉ tiêu", "Vừa sạc vừa dùng điện thoại"]
             },
             khanh: { 
                 name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-green-800', 
@@ -315,7 +372,8 @@
                     { name: 'Duolingo', percent: '20%', icon: '🦉' }, 
                     { name: 'Zalo', percent: '10%', icon: '💬' }, 
                     { name: 'Cuộc gọi/Tin nhắn', percent: '10%', icon: '📞' }
-                ] 
+                ],
+                violations: ["Xem YouTube lén lúc nghỉ trưa", "Đến giờ không chịu đi tắm", "Chơi game quá 60 phút không nghỉ mắt"]
             },
             linh: { 
                 name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-red-800', 
@@ -325,7 +383,8 @@
                     { name: 'YouTube', percent: '20%', icon: '▶️' }, 
                     { name: 'Zalo', percent: '15%', icon: '💬' }, 
                     { name: 'Duolingo', percent: '10%', icon: '🦉' }
-                ] 
+                ],
+                violations: ["Vừa ăn cơm vừa dán mắt vào màn hình", "Giành điện thoại của anh", "Gọi điện thoại buôn chuyện quá lâu"]
             }
         };
 
@@ -333,10 +392,13 @@
             const val = e.target.value;
             const display = document.getElementById('userInfoDisplay');
             const warningBox = document.getElementById('policeWarningBox');
+            const violationPanel = document.getElementById('violationPanel');
+            const violationList = document.getElementById('violationList');
             
             if (val === 'all' || !val) {
                 display.classList.add('hidden');
                 warningBox.className = 'hidden';
+                violationPanel.classList.add('hidden');
                 
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets));
                 crossChart.data.labels = baseUserLabels;
@@ -344,6 +406,10 @@
                 hourlyChart.data.datasets = JSON.parse(JSON.stringify(originalHourlyDatasets));
             } else {
                 const user = userDetails[val];
+                
+                // Hiển thị báo cáo vi phạm
+                violationPanel.classList.remove('hidden');
+                violationList.innerHTML = user.violations.map(v => `<li>⚠️ ${v}</li>`).join('');
                 
                 let appsHtml = '';
                 user.apps.forEach(app => {
