@@ -70,11 +70,11 @@
                 <!-- CẢNH BÁO LÊN ĐỒN CÔNG AN -->
                 <div id="policeWarningBox" class="hidden mt-6"></div>
 
-                <!-- KHU VỰC BÁO CÁO & HÌNH PHẠT (ĐÃ DI CHUYỂN LÊN TRÊN) -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <!-- KHU VỰC BÁO CÁO & HÌNH PHẠT -->
+                <div id="reportAndPenaltyContainer" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                     
                     <!-- Báo cáo hành vi vi phạm (Thay đổi theo user) -->
-                    <div class="panel border-orange-600 hidden" id="violationPanel">
+                    <div class="panel border-orange-600" id="violationPanel">
                         <div class="panel-header bg-orange-700 flex items-center">
                             <span class="mr-2">📋</span> HỒ SƠ LƯU TRỮ HÀNH VI VI PHẠM
                         </div>
@@ -88,13 +88,13 @@
                         </div>
                     </div>
 
-                    <!-- Khung Hình Phạt Mặc Định (Luôn hiện) -->
+                    <!-- Khung Hình Phạt Mặc Định -->
                     <div class="panel border-black" id="penaltyPanel">
                         <div class="panel-header bg-black flex items-center">
                             <span class="mr-2">⚖️</span> BỘ LUẬT XỬ LÝ KỶ LUẬT GIA ĐÌNH
                         </div>
-                        <div class="p-4 bg-gray-100 h-full">
-                            <table class="w-full text-sm border-collapse border border-gray-400 bg-white shadow-sm">
+                        <div class="p-4 bg-gray-100 h-full overflow-x-auto">
+                            <table class="w-full text-sm border-collapse border border-gray-400 bg-white shadow-sm min-w-[400px]">
                                 <thead class="bg-gray-800 text-white">
                                     <tr>
                                         <th class="border border-gray-400 p-2 text-left">Hành vi vi phạm</th>
@@ -104,7 +104,7 @@
                                 <tbody class="text-gray-800">
                                     <tr>
                                         <td class="border border-gray-400 p-2 font-semibold">Xem điện thoại > 3 giờ/ngày</td>
-                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Úp mặt vào góc tường 30 phút. Tịch thu máy 1 tuần.</td>
+                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Úp mặt góc tường 30 phút. Thu máy 1 tuần.</td>
                                     </tr>
                                     <tr class="bg-gray-50">
                                         <td class="border border-gray-400 p-2 font-semibold">Lén lút dùng trong giờ nghỉ trưa</td>
@@ -112,11 +112,11 @@
                                     </tr>
                                     <tr>
                                         <td class="border border-gray-400 p-2 font-semibold">Lười biếng, đến giờ không chịu đi tắm</td>
-                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Cắt toàn bộ giờ giải trí. Quét nhà 3 ngày liên tiếp.</td>
+                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Cắt toàn bộ giờ giải trí. Quét nhà 3 ngày.</td>
                                     </tr>
                                     <tr class="bg-gray-50">
                                         <td class="border border-gray-400 p-2 font-semibold text-red-600">Vượt ngưỡng 90% (Cảnh báo Đỏ)</td>
-                                        <td class="border border-gray-400 p-2 text-black font-black uppercase">Chuyển hồ sơ sang Đồn CA. Gửi công văn hạ thi đua về Ban Giám Hiệu.</td>
+                                        <td class="border border-gray-400 p-2 text-black font-black uppercase">Chuyển hồ sơ sang Đồn CA. Gửi công văn hạ thi đua.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -428,13 +428,13 @@
             const val = e.target.value;
             const display = document.getElementById('userInfoDisplay');
             const warningBox = document.getElementById('policeWarningBox');
-            const violationPanel = document.getElementById('violationPanel');
+            const reportContainer = document.getElementById('reportAndPenaltyContainer');
             const violationList = document.getElementById('violationList');
             
             if (val === 'all' || !val) {
                 display.classList.add('hidden');
                 warningBox.className = 'hidden';
-                violationPanel.classList.add('hidden');
+                reportContainer.classList.add('hidden');
                 
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets));
                 crossChart.data.labels = baseUserLabels;
@@ -445,7 +445,7 @@
                 
                 // Hiển thị báo cáo vi phạm random
                 const randomViolations = getRandomViolations(val);
-                violationPanel.classList.remove('hidden');
+                reportContainer.classList.remove('hidden');
                 violationList.innerHTML = randomViolations.map(v => `<li>⚠️ ${v}</li>`).join('');
                 
                 // Random app data
