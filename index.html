@@ -450,6 +450,47 @@
             options: { ...commonOptions, scales: { ...commonOptions.scales, y: { ...commonOptions.scales.y, max: 2.2 } } }
         });
 
+        // --- CÁC HÀM RANDOM ĐỘNG THEO CONFIG ---
+        function getRandomViolations(userId) {
+            let pool = appConfig.violations[userId] || [];
+            if (pool.length === 0) return ["Không có dữ liệu vi phạm"];
+            
+            let min = appConfig.settings.minViolationsPerDay || 2;
+            let max = appConfig.settings.maxViolationsPerDay || 3;
+            let count = Math.floor(Math.random() * (max - min + 1)) + min;
+            count = Math.min(count, pool.length);
+            
+            let shuffled = pool.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function getRandomApps(userId) {
+            let user = appConfig.members[userId];
+            if (!user) return [];
+            let weights = user.weights || {};
+
+            let appData = appConfig.platforms.map(app => {
+                let baseW = weights[app.id] || 0;
+                let val = baseW > 0 ? baseW + (Math.random() * 10 - 5) : 0; 
+                return { ...app, val: Math.max(0, val) };
+            });
+
+            let total = appData.reduce((sum, app) => sum + app.val, 0);
+            
+            appData = appData.map(app => {
+                let pct = total > 0 && app.val > 0 ? Math.round((app.val / total) * 100) : 0;
+                return { ...app, percent: pct };
+            });
+
+            let actualSum = appData.reduce((sum, app) => sum + app.percent, 0);
+            if (actualSum > 0 && actualSum !== 100) {
+                appData.sort((a,b) => b.percent - a.percent);
+                appData[0].percent += (100 - actualSum);
+            }
+
+            return appData.sort((a, b) => b.percent - a.percent);
+        }
+
         document.getElementById('userSelect').addEventListener('change', function(e) {
             const val = e.target.value;
             const display = document.getElementById('userInfoDisplay');
