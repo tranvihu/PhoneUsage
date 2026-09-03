@@ -3,152 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Thời Gian Dùng Điện Thoại Gia Đình</title>
+    <title>Dashboard Thời Gian Sử Dụng Điện Thoại</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-50 font-sans p-4 md:p-8">
-    <div class="max-w-6xl mx-auto space-y-6">
-        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2">📱 Thống Kê Sử Dụng Điện Thoại Gia Đình</h1>
-        <p class="text-center text-gray-500 mb-6">Theo dõi thời gian sử dụng trong 7 ngày gần nhất</p>
+    <div class="max-w-7xl mx-auto space-y-8">
+        <div class="text-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">📱 Dashboard Quản Lý Thời Gian Sử Dụng</h1>
+            <p class="text-gray-500">Phân tích chi tiết thói quen dùng điện thoại của gia đình</p>
+        </div>
 
-        <!-- Grid for Charts -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Bố -->
-            <div class="bg-white rounded-2xl shadow p-4 border-t-4 border-blue-500">
-                <h2 class="text-xl font-semibold text-center text-blue-600 mb-2">👨 Điện Thoại Bố</h2>
-                <div class="relative h-[250px] w-full">
-                    <canvas id="chartBo"></canvas>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Biểu đồ 1: Thời gian sử dụng theo ngày (Line Chart) -->
+            <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-t-4 border-indigo-500">
+                <h2 class="text-lg md:text-xl font-bold text-center text-gray-800 mb-1">📈 Thời gian dùng theo ngày (7 ngày qua)</h2>
+                <p class="text-xs text-center text-gray-500 mb-4">So sánh thời gian (giờ) giữa các thành viên</p>
+                <div class="relative h-[350px] w-full">
+                    <canvas id="dailyUsageChart"></canvas>
                 </div>
             </div>
-            <!-- Mẹ -->
-            <div class="bg-white rounded-2xl shadow p-4 border-t-4 border-pink-500">
-                <h2 class="text-xl font-semibold text-center text-pink-500 mb-2">👩 Điện Thoại Mẹ</h2>
-                <div class="relative h-[250px] w-full">
-                    <canvas id="chartMe"></canvas>
-                </div>
-            </div>
-            <!-- Bà -->
-            <div class="bg-white rounded-2xl shadow p-4 border-t-4 border-green-500">
-                <h2 class="text-xl font-semibold text-center text-green-600 mb-2">👵 Điện Thoại Bà</h2>
-                <div class="relative h-[250px] w-full">
-                    <canvas id="chartBa"></canvas>
-                </div>
-            </div>
-            <!-- Con -->
-            <div class="bg-white rounded-2xl shadow p-4 border-t-4 border-purple-500">
-                <h2 class="text-xl font-semibold text-center text-purple-600 mb-2">👦 Điện Thoại Con</h2>
-                <div class="relative h-[250px] w-full">
-                    <canvas id="chartCon"></canvas>
+
+            <!-- Biểu đồ 2: Chéo thiết bị (Stacked Bar Chart) -->
+            <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-t-4 border-teal-500">
+                <h2 class="text-lg md:text-xl font-bold text-center text-gray-800 mb-1">🔄 Phân bổ mượn thiết bị</h2>
+                <p class="text-xs text-center text-gray-500 mb-4">Chi tiết mỗi người đang sử dụng máy của ai (Tổng giờ)</p>
+                <div class="relative h-[350px] w-full">
+                    <canvas id="crossUsageChart"></canvas>
                 </div>
             </div>
         </div>
 
         <!-- Refresh Button -->
-        <div class="mt-8 flex flex-col items-center justify-center gap-2">
-            <button id="refreshBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 flex items-center justify-center w-full md:w-auto">
+        <div class="flex flex-col items-center justify-center gap-2 mt-4">
+            <button id="refreshBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center w-full md:w-auto">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                Cập nhật thời gian hôm nay
+                Cập nhật dữ liệu hôm nay
             </button>
             <p class="text-sm text-gray-500 text-center">
-                *Mô phỏng hành động sử dụng thêm điện thoại trong ngày hôm nay của cả nhà.
+                *Click để tăng số liệu ngày hôm nay trên biểu đồ đường.
             </p>
         </div>
     </div>
 
     <script>
-        // Generate labels for last 7 days
+        // --- DATA SETUP ---
         const getLast7Days = () => {
             const labels = [];
             for (let i = 6; i >= 0; i--) {
                 const d = new Date();
                 d.setDate(d.getDate() - i);
-                if (i === 0) labels.push('Hôm nay');
-                else labels.push(`${d.getDate()}/${d.getMonth() + 1}`);
+                labels.push(i === 0 ? 'Hôm nay' : `${d.getDate()}/${d.getMonth() + 1}`);
             }
             return labels;
         };
-        const daysLabels = getLast7Days();
 
-        // Generic chart config function
-        const createChartConfig = (label, data, color) => ({
-            type: 'bar',
+        const colors = {
+            bo: '#3b82f6', // Xanh dương
+            me: '#ec4899', // Hồng
+            ba: '#22c55e', // Xanh lá
+            con: '#a855f7' // Tím
+        };
+
+        // --- CHART 1: LINE CHART (Xu hướng 7 ngày) ---
+        const ctxDaily = document.getElementById('dailyUsageChart').getContext('2d');
+        const dailyChart = new Chart(ctxDaily, {
+            type: 'line',
             data: {
-                labels: daysLabels,
-                datasets: [{
-                    label: label,
-                    data: data,
-                    backgroundColor: color.bg,
-                    borderColor: color.border,
-                    borderWidth: 1,
-                    borderRadius: 4
-                }]
+                labels: getLast7Days(),
+                datasets: [
+                    { label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 3 },
+                    { label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.4, borderWidth: 3 },
+                    { label: 'Bà', data: [1.5, 1.2, 1.8, 1.5, 2.0, 1.7, 0.8], borderColor: colors.ba, backgroundColor: colors.ba, tension: 0.4, borderWidth: 3 },
+                    { label: 'Con', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.con, backgroundColor: colors.con, tension: 0.4, borderWidth: 3 }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 10,
-                        title: { display: true, text: 'Giờ sử dụng' }
-                    }
+                    y: { beginAtZero: true, title: { display: true, text: 'Số giờ' }, max: 12 }
                 },
                 plugins: {
-                    legend: { display: false },
+                    tooltip: { mode: 'index', intersect: false }
+                }
+            }
+        });
+
+        // --- CHART 2: STACKED BAR CHART (Phân bổ dùng chéo máy) ---
+        // X-axis: Người sử dụng. 
+        // Y-axis: Tổng số giờ mượn máy của ai.
+        const ctxCross = document.getElementById('crossUsageChart').getContext('2d');
+        const crossChart = new Chart(ctxCross, {
+            type: 'bar',
+            data: {
+                labels: ['Bố (Người dùng)', 'Mẹ (Người dùng)', 'Bà (Người dùng)', 'Con (Người dùng)'],
+                datasets: [
+                    { label: 'Dùng máy của Bố', data: [18, 1, 0, 4], backgroundColor: colors.bo },
+                    { label: 'Dùng máy của Mẹ', data: [0.5, 20, 1, 8], backgroundColor: colors.me },
+                    { label: 'Dùng máy của Bà', data: [0, 0.5, 10, 0], backgroundColor: colors.ba },
+                    { label: 'Dùng máy của Con', data: [0, 0, 0, 5], backgroundColor: colors.con }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, title: { display: true, text: 'Tổng giờ (trong 7 ngày)' } }
+                },
+                plugins: {
                     tooltip: {
                         callbacks: {
-                            label: function(context) { return context.parsed.y.toFixed(1) + ' giờ'; }
+                            label: function(context) { return context.dataset.label + ': ' + context.parsed.y + ' giờ'; }
                         }
                     }
                 }
             }
         });
 
-        // Colors configurations
-        const colors = {
-            bo: { bg: 'rgba(59, 130, 246, 0.6)', border: 'rgba(59, 130, 246, 1)' },     // blue
-            me: { bg: 'rgba(236, 72, 153, 0.6)', border: 'rgba(236, 72, 153, 1)' },    // pink
-            ba: { bg: 'rgba(34, 197, 94, 0.6)', border: 'rgba(34, 197, 94, 1)' },      // green
-            con: { bg: 'rgba(168, 85, 247, 0.6)', border: 'rgba(168, 85, 247, 1)' }    // purple
-        };
-
-        // Mock Data
-        const dataBo = [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5];
-        const dataMe = [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0];
-        const dataBa = [1.5, 1.2, 1.8, 1.5, 2.0, 1.7, 0.8];
-        const dataCon = [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0];
-
-        // Initialize Charts
-        const charts = [
-            new Chart(document.getElementById('chartBo').getContext('2d'), createChartConfig('Bố', dataBo, colors.bo)),
-            new Chart(document.getElementById('chartMe').getContext('2d'), createChartConfig('Mẹ', dataMe, colors.me)),
-            new Chart(document.getElementById('chartBa').getContext('2d'), createChartConfig('Bà', dataBa, colors.ba)),
-            new Chart(document.getElementById('chartCon').getContext('2d'), createChartConfig('Con', dataCon, colors.con))
-        ];
-
-        // Refresh Button Logic
+        // --- NÚT CẬP NHẬT ---
         document.getElementById('refreshBtn').addEventListener('click', () => {
-            charts.forEach(chart => {
-                const dataset = chart.data.datasets[0];
+            // Chỉ cập nhật biểu đồ 1 (Hôm nay) để tạo hiệu ứng chuyển động
+            dailyChart.data.datasets.forEach(dataset => {
                 const todayIndex = dataset.data.length - 1;
-                
-                // Increase by random 0.1 to 0.5 hours
-                const increase = (Math.random() * 0.4) + 0.1;
+                const increase = (Math.random() * 0.5) + 0.1;
                 dataset.data[todayIndex] = Math.min(24, dataset.data[todayIndex] + increase);
-                chart.update();
             });
+            dailyChart.update();
 
+            // Hiệu ứng nút
             const btn = document.getElementById('refreshBtn');
             const originalHTML = btn.innerHTML;
             btn.innerHTML = 'Đã cập nhật! ✓';
             btn.classList.replace('bg-indigo-600', 'bg-emerald-500');
-            btn.classList.replace('hover:bg-indigo-700', 'hover:bg-emerald-600');
             
             setTimeout(() => {
                 btn.innerHTML = originalHTML;
                 btn.classList.replace('bg-emerald-500', 'bg-indigo-600');
-                btn.classList.replace('hover:bg-emerald-600', 'hover:bg-indigo-700');
             }, 1000);
         });
     </script>
