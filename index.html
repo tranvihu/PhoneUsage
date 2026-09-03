@@ -54,10 +54,7 @@
                     <label for="userSelect" class="font-bold text-gray-800 uppercase text-sm">Mã định danh (Họ tên):</label>
                     <select id="userSelect" class="border-2 border-gray-400 p-2 w-full md:w-64 bg-white font-bold text-blue-900 shadow-inner uppercase">
                         <option value="all">-- TOÀN BỘ DANH SÁCH --</option>
-                        <option value="bo">HỒ SƠ: BỐ</option>
-                        <option value="me">HỒ SƠ: MẸ</option>
-                        <option value="khanh">HỒ SƠ: NHẬT KHÁNH</option>
-                        <option value="linh">HỒ SƠ: NHẬT LINH</option>
+                        <!-- Dynamic options will be rendered here -->
                     </select>
                 </div>
                 <p class="text-xs text-red-600 font-bold mt-2 italic">* Cảnh báo: Mọi truy cập đều được ghi log tại máy chủ của Bộ Công An.</p>
@@ -101,23 +98,8 @@
                                         <th class="border border-gray-400 p-2 text-left w-1/2">Khung hình phạt (Tích lũy)</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-gray-800">
-                                    <tr>
-                                        <td class="border border-gray-400 p-2 font-semibold">Xem điện thoại > 3 giờ/ngày</td>
-                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Úp mặt góc tường 30 phút. Thu máy 1 tuần.</td>
-                                    </tr>
-                                    <tr class="bg-gray-50">
-                                        <td class="border border-gray-400 p-2 font-semibold">Lén lút dùng trong giờ nghỉ trưa</td>
-                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Chịu 3 roi vào mông. Viết bản kiểm điểm 2 trang.</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-400 p-2 font-semibold">Lười biếng, đến giờ không chịu đi tắm</td>
-                                        <td class="border border-gray-400 p-2 text-red-700 font-bold">Cắt toàn bộ giờ giải trí. Quét nhà 3 ngày.</td>
-                                    </tr>
-                                    <tr class="bg-gray-50">
-                                        <td class="border border-gray-400 p-2 font-semibold text-red-600">Vượt ngưỡng 90% (Cảnh báo Đỏ)</td>
-                                        <td class="border border-gray-400 p-2 text-black font-black uppercase">Chuyển hồ sơ sang Đồn CA. Gửi công văn hạ thi đua.</td>
-                                    </tr>
+                                <tbody id="penaltyTableBody" class="text-gray-800">
+                                    <!-- Sẽ được render từ appConfig -->
                                 </tbody>
                             </table>
                         </div>
@@ -215,9 +197,32 @@
                 <p class="font-black text-red-500 text-xl tracking-wider">ĐƯỜNG DÂY NÓNG: 113</p>
                 <p class="text-gray-300 mt-1">Hỗ trợ kỹ thuật: hotro@mps.gov.vn</p>
                 <p class="text-gray-500 mt-2 text-xs">© Bản quyền thuộc về Bộ Công An Việt Nam</p>
+                <button id="openAdminBtn" class="mt-2 text-xs text-blue-400 hover:text-blue-300 underline font-bold uppercase cursor-pointer">⚙️ Cấu Hình Dữ Liệu Hệ Thống</button>
             </div>
         </div>
     </footer>
+
+    <!-- ADMIN MODAL -->
+    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex justify-center items-center p-4">
+        <div class="bg-white w-full max-w-4xl max-h-full rounded-lg shadow-2xl flex flex-col overflow-hidden border-4 border-red-700">
+            <div class="bg-slate-900 text-white p-4 flex justify-between items-center border-b-4 border-red-700">
+                <h2 class="font-black text-xl uppercase tracking-wider text-yellow-500">⚙️ Bảng Điều Khiển Quản Trị Hệ Thống (ADMIN)</h2>
+                <button id="closeAdminBtn" class="text-white hover:text-red-500 font-bold text-2xl">&times;</button>
+            </div>
+            <div class="p-4 flex-grow overflow-hidden flex flex-col">
+                <p class="mb-2 text-sm text-gray-700 font-semibold">Vui lòng chỉnh sửa các thông số (Thành viên, Nền tảng, Lỗi vi phạm, Khung hình phạt) ở dạng JSON bên dưới. Hãy cẩn thận giữ nguyên cấu trúc ngoặc nhọn, ngoặc vuông để tránh lỗi hệ thống.</p>
+                <textarea id="configEditor" class="w-full flex-grow p-4 border border-gray-400 font-mono text-sm bg-gray-50 rounded" autocomplete="off" spellcheck="false"></textarea>
+                <p id="adminError" class="text-red-600 font-bold mt-2 text-sm hidden"></p>
+            </div>
+            <div class="bg-gray-200 p-4 flex justify-between">
+                <button id="resetConfigBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow">Khôi phục Mặc định</button>
+                <div class="flex gap-4">
+                    <button id="cancelAdminBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow">Hủy bỏ</button>
+                    <button id="saveConfigBtn" class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded shadow">Lưu Cấu Hình & Khởi Động Lại</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Set Font cho Chart.js về Roboto
@@ -360,79 +365,149 @@
         });
 
 
-        // --- LOGIC LỌC COMBOBOX VÀ RANDOM DATA ---
-        const userDetails = {
-            bo: { 
-                name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-blue-800',
-                dob: '07/08/1989', age: 37, job: 'Công nhân viên chức'
+        // --- CẤU HÌNH DỮ LIỆU ĐỘNG (ADMIN CONFIG) ---
+        const defaultConfig = {
+            members: {
+                bo: { 
+                    name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-blue-800',
+                    dob: '07/08/1989', age: 37, job: 'Công nhân viên chức', type: 'adult',
+                    weights: { youtube: 15, facebook: 30, zalo: 20, web: 40, tiktok: 10, shopee: 0, call: 5, game: 0, duolingo: 0 }
+                },
+                me: { 
+                    name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-purple-800',
+                    dob: '27/11/1989', age: 37, job: 'Công nhân viên chức', type: 'adult',
+                    weights: { youtube: 15, facebook: 30, zalo: 20, web: 20, tiktok: 25, shopee: 35, call: 5, game: 0, duolingo: 0 }
+                },
+                linh: { 
+                    name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-red-800',
+                    dob: '08/10/2017', age: 9, className: '4C', school: 'Tiểu học Bình Hàn', teacher: 'Cô Yến', type: 'child',
+                    weights: { youtube: 30, game: 10, tiktok: 0, duolingo: 10, facebook: 15, zalo: 15, web: 0, shopee: 0, call: 10 }
+                },
+                khanh: { 
+                    name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-green-800',
+                    dob: '17/04/2029', age: 6, className: '1C', school: 'Tiểu học Bình Hàn', teacher: 'Cô Luyên', type: 'child',
+                    weights: { youtube: 40, game: 30, tiktok: 0, duolingo: 10, facebook: 0, zalo: 0, web: 0, shopee: 0, call: 10 }
+                }
             },
-            me: { 
-                name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-purple-800',
-                dob: '27/11/1989', age: 37, job: 'Công nhân viên chức'
+            platforms: [
+                { id: 'youtube', name: 'YouTube', icon: '▶️' },
+                { id: 'facebook', name: 'Facebook', icon: '📘' },
+                { id: 'zalo', name: 'Zalo', icon: '💬' },
+                { id: 'tiktok', name: 'TikTok', icon: '🎵' },
+                { id: 'game', name: 'Trò chơi điện tử', icon: '🎮' },
+                { id: 'duolingo', name: 'Duolingo', icon: '🦉' },
+                { id: 'web', name: 'Trình duyệt Web', icon: '🌐' },
+                { id: 'shopee', name: 'Shopee', icon: '🛍️' },
+                { id: 'call', name: 'Cuộc gọi/Tin nhắn', icon: '📞' }
+            ],
+            violations: {
+                bo: [ "Thức khuya đọc báo qua 23h đêm", "Sử dụng điện thoại trong bữa ăn", "Lướt TikTok âm lượng lớn", "Mua sắm online vượt chỉ tiêu", "Vừa sạc vừa dùng điện thoại" ],
+                me: [ "Thức khuya đọc báo qua 23h đêm", "Sử dụng điện thoại trong bữa ăn", "Lướt TikTok âm lượng lớn", "Mua sắm online vượt chỉ tiêu", "Vừa sạc vừa dùng điện thoại" ],
+                linh: [ "Gọi điện thoại buôn chuyện quá lâu", "Tranh giành đồ chơi với em trai", "Lén dùng TikTok của mẹ", "Vừa làm bài tập vừa nhắn tin", "Không chịu nhường em chơi cùng", "Để âm lượng quá lớn khi xem video", "Không chịu gội đầu" ],
+                khanh: [ "Xem YouTube lúc nghỉ trưa", "Đến giờ không chịu đi tắm", "Chơi game quá nhiều không nghỉ mắt", "Giành điện thoại của chị gái", "Nằm xem điện thoại sát mắt", "Vừa ăn cơm vừa đòi xem điện thoại", "Đánh chị gái" ]
             },
-            linh: { 
-                name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-red-800',
-                dob: '08/10/2017', age: 9, className: '4C', school: 'Tiểu học Bình Hàn', teacher: 'Cô Yến'
-            },
-            khanh: { 
-                name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-green-800',
-                dob: '17/04/2029', age: 6, className: '1C', school: 'Tiểu học Bình Hàn', teacher: 'Cô Luyến'
+            penalties: [
+                { violation: "Xem điện thoại > 3 giờ/ngày", penalty: "Úp mặt góc tường 30 phút. Thu máy 1 tuần." },
+                { violation: "Lén lút dùng trong giờ nghỉ trưa", penalty: "Chịu 3 roi vào mông. Viết bản kiểm điểm 2 trang." },
+                { violation: "Lười biếng, đến giờ không chịu đi tắm", penalty: "Cắt toàn bộ giờ giải trí. Quét nhà 3 ngày." },
+                { violation: "Vượt ngưỡng 90% (Cảnh báo Đỏ)", penalty: "Chuyển hồ sơ sang Đồn CA. Gửi công văn hạ thi đua." }
+            ],
+            settings: {
+                minViolationsPerDay: 2,
+                maxViolationsPerDay: 3
             }
         };
 
-        const allPlatforms = [
-            { id: 'youtube', name: 'YouTube', icon: '▶️' },
-            { id: 'facebook', name: 'Facebook', icon: '📘' },
-            { id: 'zalo', name: 'Zalo', icon: '💬' },
-            { id: 'tiktok', name: 'TikTok', icon: '🎵' },
-            { id: 'game', name: 'Trò chơi điện tử', icon: '🎮' },
-            { id: 'duolingo', name: 'Duolingo', icon: '🦉' },
-            { id: 'web', name: 'Trình duyệt Web', icon: '🌐' },
-            { id: 'shopee', name: 'Shopee', icon: '🛍️' },
-            { id: 'call', name: 'Cuộc gọi/Tin nhắn', icon: '📞' }
-        ];
+        // Lấy cấu hình từ LocalStorage hoặc dùng mặc định
+        let appConfig;
+        try {
+            appConfig = JSON.parse(localStorage.getItem('phoneUsageConfig')) || defaultConfig;
+        } catch (e) {
+            appConfig = defaultConfig;
+        }
 
-        const violationsData = {
-            adult: [
-                "Thức khuya đọc báo qua 23h đêm", "Sử dụng điện thoại trong bữa ăn", "Lướt TikTok âm lượng lớn", 
-                "Mua sắm online vượt chỉ tiêu", "Vừa sạc vừa dùng điện thoại", "Bỏ quên việc nhà vì mải xem Facebook"
-            ],
-            khanh: [
-                "Xem YouTube lúc nghỉ trưa", "Đến giờ không chịu đi tắm", "Chơi game quá nhiều không nghỉ mắt", 
-                "Giành điện thoại của chị gái", "Nằm xem điện thoại sát mắt", "Vừa ăn cơm vừa đòi xem điện thoại", "Đánh chị gái"
-            ],
-            linh: [
-                "Gọi điện thoại buôn chuyện quá lâu", "Tranh giành đồ chơi với em trai", "Lén dùng TikTok của mẹ", 
-                "Vừa làm bài tập vừa nhắn tin", "Không chịu nhường em chơi cùng", "Để âm lượng quá lớn khi xem video", "Không chịu gội đầu"
-            ]
-        };
+        // Khởi tạo giao diện bằng dữ liệu từ appConfig
+        function initializeDynamicUI() {
+            // 1. Render Combobox
+            const userSelect = document.getElementById('userSelect');
+            // Giữ lại option "all"
+            userSelect.innerHTML = '<option value="all">-- TOÀN BỘ DANH SÁCH --</option>';
+            for (const [key, user] of Object.entries(appConfig.members)) {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = `HỒ SƠ: ${user.name.toUpperCase()}`;
+                userSelect.appendChild(opt);
+            }
 
+            // 2. Render Bảng Hình Phạt
+            const penaltyTbody = document.getElementById('penaltyTableBody');
+            penaltyTbody.innerHTML = '';
+            appConfig.penalties.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                if (index % 2 !== 0) tr.classList.add('bg-gray-50');
+                tr.innerHTML = `
+                    <td class="border border-gray-400 p-2 font-semibold ${item.violation.includes('90%') ? 'text-red-600' : ''}">${item.violation}</td>
+                    <td class="border border-gray-400 p-2 ${item.violation.includes('90%') ? 'text-black font-black uppercase' : 'text-red-700 font-bold'}">${item.penalty}</td>
+                `;
+                penaltyTbody.appendChild(tr);
+            });
+        }
+        initializeDynamicUI();
+
+        // Admin Modal Logic
+        const adminModal = document.getElementById('adminModal');
+        const configEditor = document.getElementById('configEditor');
+        const adminError = document.getElementById('adminError');
+        
+        document.getElementById('openAdminBtn').addEventListener('click', () => {
+            configEditor.value = JSON.stringify(appConfig, null, 4);
+            adminError.classList.add('hidden');
+            adminModal.classList.remove('hidden');
+        });
+
+        const closeAdmin = () => adminModal.classList.add('hidden');
+        document.getElementById('closeAdminBtn').addEventListener('click', closeAdmin);
+        document.getElementById('cancelAdminBtn').addEventListener('click', closeAdmin);
+
+        document.getElementById('resetConfigBtn').addEventListener('click', () => {
+            if(confirm("Bạn có chắc chắn muốn khôi phục toàn bộ cấu hình về mặc định? Mọi thay đổi sẽ bị mất!")) {
+                localStorage.removeItem('phoneUsageConfig');
+                location.reload();
+            }
+        });
+
+        document.getElementById('saveConfigBtn').addEventListener('click', () => {
+            try {
+                const parsed = JSON.parse(configEditor.value);
+                localStorage.setItem('phoneUsageConfig', JSON.stringify(parsed));
+                location.reload(); // Tải lại trang để áp dụng
+            } catch (err) {
+                adminError.textContent = "Lỗi cú pháp JSON: " + err.message;
+                adminError.classList.remove('hidden');
+            }
+        });
+
+        // --- CÁC HÀM RANDOM ĐỘNG THEO CONFIG ---
         function getRandomViolations(userId) {
-            let pool = [];
-            if (userId === 'bo' || userId === 'me') pool = violationsData.adult;
-            else if (userId === 'khanh') pool = violationsData.khanh;
-            else pool = violationsData.linh;
-
-            // Random 2 đến 3 lỗi
-            let count = Math.floor(Math.random() * 2) + 2;
+            let pool = appConfig.violations[userId] || [];
+            if (pool.length === 0) return ["Không có dữ liệu vi phạm"];
+            
+            let min = appConfig.settings.minViolationsPerDay;
+            let max = appConfig.settings.maxViolationsPerDay;
+            let count = Math.floor(Math.random() * (max - min + 1)) + min;
+            count = Math.min(count, pool.length); // Không vượt quá số lỗi hiện có
+            
             let shuffled = pool.sort(() => 0.5 - Math.random());
             return shuffled.slice(0, count);
         }
 
         function getRandomApps(userId) {
-            let weights = {};
-            if (userId === 'khanh') {
-                weights = { youtube: 40, game: 30, tiktok: 0, duolingo: 10, facebook: 0, zalo: 0, web: 0, shopee: 0, call: 10 };
-            } else if (userId === 'linh') {
-                weights = { youtube: 30, game: 10, tiktok: 0, duolingo: 10, facebook: 15, zalo: 15, web: 0, shopee: 0, call: 10 };
-            } else {
-                weights = { youtube: 15, facebook: 30, zalo: 20, web: 20, tiktok: 10, shopee: 10, call: 5, game: 0, duolingo: 0 };
-                if (userId === 'me') { weights.shopee = 35; weights.tiktok = 25; }
-                if (userId === 'bo') { weights.web = 40; weights.shopee = 0; weights.tiktok = 0; }
-            }
+            let user = appConfig.members[userId];
+            if (!user) return [];
+            let weights = user.weights || {};
 
-            let appData = allPlatforms.map(app => {
-                let baseW = weights[app.id];
+            let appData = appConfig.platforms.map(app => {
+                let baseW = weights[app.id] || 0;
                 let val = baseW > 0 ? baseW + (Math.random() * 10 - 5) : 0; 
                 return { ...app, val: Math.max(0, val) };
             });
@@ -470,7 +545,7 @@
                 crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets));
                 hourlyChart.data.datasets = JSON.parse(JSON.stringify(originalHourlyDatasets));
             } else {
-                const user = userDetails[val];
+                const user = appConfig.members[val];
                 
                 // Hiển thị báo cáo vi phạm random
                 const randomViolations = getRandomViolations(val);
