@@ -82,18 +82,20 @@
         };
         const daysLabels = getLast7Days();
 
+        // Đã thay đổi màu sắc rực rỡ và rõ ràng hơn cho Bố và Mẹ
         const colors = {
-            bo: '#64748b',    // Xám đậm
-            me: '#94a3b8',    // Xám nhạt
+            bo: '#16a34a',    // Xanh lá đậm
+            me: '#9333ea',    // Tím
             khanh: '#3b82f6', // Xanh dương
             linh: '#ec4899'   // Hồng
         };
 
         const baseUserLabels = ['Bố', 'Mẹ', 'Nhật Khánh', 'Nhật Linh'];
 
+        // Đã bỏ borderDash (viền nét đứt) để các đường của bố mẹ trở nên sắc nét như của con cái
         const originalDailyDatasets = [
-            { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 3, borderDash: [5, 5] },
-            { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.4, borderWidth: 3, borderDash: [5, 5] },
+            { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 3 },
+            { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.4, borderWidth: 3 },
             { id: 'khanh', label: 'Nhật Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.4, borderWidth: 4 },
             { id: 'linh', label: 'Nhật Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.4, borderWidth: 4 }
         ];
@@ -131,7 +133,7 @@
         // --- LOGIC LỌC COMBOBOX & DỮ LIỆU APP ---
         const userDetails = {
             bo: {
-                name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Chỉ dùng máy cá nhân', color: 'text-slate-700', bgColor: 'bg-slate-100', icon: '👨',
+                name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Chỉ dùng máy cá nhân', color: 'text-green-700', bgColor: 'bg-green-50', icon: '👨',
                 apps: [
                     { name: 'Đọc báo / Web', percent: '40%' },
                     { name: 'Zalo', percent: '30%' },
@@ -139,7 +141,7 @@
                 ]
             },
             me: {
-                name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Dùng máy cá nhân, đôi khi mượn Bố', color: 'text-slate-600', bgColor: 'bg-slate-50', icon: '👩',
+                name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Dùng máy cá nhân, đôi khi mượn Bố', color: 'text-purple-600', bgColor: 'bg-purple-50', icon: '👩',
                 apps: [
                     { name: 'Facebook', percent: '40%' },
                     { name: 'TikTok', percent: '35%' },
