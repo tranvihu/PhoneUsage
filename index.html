@@ -6,7 +6,10 @@
     <title>Cổng Thông Tin Giám Sát Điện Tử</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Thêm font Roboto để hỗ trợ tiếng Việt chuẩn xác và trông nghiêm túc -->
+    <!-- Thư viện Bản đồ Leaflet JS để hiển thị bản đồ thực tế -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Roboto', sans-serif; background-color: #e5e7eb; }
@@ -96,31 +99,15 @@
                 </div>
             </div>
 
-            <!-- Bản Đồ Công An -->
+            <!-- Bản Đồ Công An (THỰC TẾ) -->
             <div class="panel border-red-700">
                 <div class="panel-header danger flex justify-between items-center">
-                    <span>🚨 ĐƠN VỊ PHỤ TRÁCH ĐỊA BÀN</span>
+                    <span>🚨 ĐƠN VỊ PHỤ TRÁCH ĐỊA BÀN & ĐỊNH VỊ GPS</span>
                     <span class="animate-pulse w-3 h-3 bg-red-500 rounded-full border border-white"></span>
                 </div>
                 <div class="p-4 bg-gray-50">
-                    <!-- Bản đồ giả lập -->
-                    <div class="bg-gray-300 h-32 rounded flex items-center justify-between px-8 md:px-16 border-2 border-gray-400 mb-4 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1 25%, transparent 25%, transparent 75%, #cbd5e1 75%, #cbd5e1), repeating-linear-gradient(45deg, #cbd5e1 25%, #e2e8f0 25%, #e2e8f0 75%, #cbd5e1 75%, #cbd5e1); background-size: 20px 20px;">
-                        
-                        <!-- Connecting Line -->
-                        <div class="absolute inset-x-8 md:inset-x-16 top-1/2 h-0 border-t-2 border-dashed border-red-500 transform -translate-y-1/2 z-0 opacity-70"></div>
-                        
-                        <!-- Family Pin -->
-                        <div class="relative z-10 flex flex-col items-center">
-                            <span class="text-4xl drop-shadow-md">🏠</span>
-                            <div class="bg-blue-900 text-white px-2 py-1 border border-black font-bold text-[10px] uppercase shadow mt-1">Nơi cư trú</div>
-                        </div>
-
-                        <!-- Police Pin -->
-                        <div class="relative z-10 flex flex-col items-center">
-                            <span class="text-4xl drop-shadow-md animate-bounce">📍</span>
-                            <div class="bg-white text-red-700 px-2 py-1 border border-black font-bold text-[10px] uppercase shadow mt-1">Trụ sở Công An</div>
-                        </div>
-                    </div>
+                    <!-- Bản đồ thực tế (Leaflet) -->
+                    <div id="realMap" class="h-48 rounded border-2 border-gray-400 mb-4 z-0 shadow-inner"></div>
 
                     <!-- Bảng thông tin -->
                     <table class="gov-table w-full text-sm">
@@ -130,12 +117,12 @@
                                 <td class="font-bold text-gray-800 text-base uppercase">Đ/c Thành</td>
                             </tr>
                             <tr>
-                                <th class="text-blue-900">Địa chỉ mục tiêu:</th>
-                                <td class="font-bold text-gray-800 text-xs">Số 123, Đường Hạnh Phúc</td>
+                                <th class="text-blue-900">Địa chỉ giám sát:</th>
+                                <td id="targetAddress" class="font-bold text-gray-800 text-xs italic text-blue-700">Đang khởi động hệ thống định vị vệ tinh GPS...</td>
                             </tr>
                             <tr>
                                 <th class="text-red-800">Trụ sở Công An:</th>
-                                <td class="font-bold text-gray-800 text-xs">Số 456, Đường An Ninh (Cách 500m)</td>
+                                <td id="policeAddress" class="font-bold text-gray-800 text-xs text-red-700">Đang quét khu vực lân cận...</td>
                             </tr>
                             <tr>
                                 <th>SĐT Liên hệ trực tiếp:</th>
@@ -166,7 +153,72 @@
         Chart.defaults.font.family = 'Roboto, sans-serif';
         Chart.defaults.font.size = 12;
 
-        // --- DATA SETUP ---
+        // --- BẢN ĐỒ ĐỊNH VỊ THỰC TẾ (LEAFLET + GEOLOCATION) ---
+        const map = L.map('realMap').setView([21.0285, 105.8542], 13); // Mặc định Hà Nội
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© Hệ thống định vị vệ tinh BCA'
+        }).addTo(map);
+
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                
+                // Icon mục tiêu (ngôi nhà)
+                const userIcon = L.divIcon({ 
+                    html: '<div class="text-2xl drop-shadow-md">🏠</div>', 
+                    className: 'bg-transparent', 
+                    iconSize: [30, 30], 
+                    iconAnchor: [15, 15] 
+                });
+                const userMarker = L.marker([lat, lon], {icon: userIcon}).addTo(map);
+                userMarker.bindPopup("<b class='text-blue-700'>MỤC TIÊU GIÁM SÁT</b><br>Đã khóa mục tiêu qua GPS.").openPopup();
+
+                // Tạo trạm công an giả lập gần đó (~300m - 500m)
+                const offsetLat = (Math.random() * 0.003 + 0.002) * (Math.random() > 0.5 ? 1 : -1);
+                const offsetLon = (Math.random() * 0.003 + 0.002) * (Math.random() > 0.5 ? 1 : -1);
+                const pLat = lat + offsetLat;
+                const pLon = lon + offsetLon;
+                
+                const policeIcon = L.divIcon({ 
+                    html: '<div class="text-2xl drop-shadow-md animate-bounce">📍</div>', 
+                    className: 'bg-transparent', 
+                    iconSize: [30, 30], 
+                    iconAnchor: [15, 30] 
+                });
+                L.marker([pLat, pLon], {icon: policeIcon}).addTo(map).bindPopup("<b class='text-red-700'>TRỤ SỞ CÔNG AN</b>");
+
+                // Vẽ đường nối nét đứt đỏ (Mô phỏng đường đi của xe chuyên dụng)
+                L.polyline([[lat, lon], [pLat, pLon]], {color: '#b91c1c', dashArray: '5, 5', weight: 3}).addTo(map);
+
+                // Zoom vừa vặn 2 điểm
+                map.fitBounds([[lat, lon], [pLat, pLon]], { padding: [30, 30] });
+
+                // Lấy tên địa chỉ thực tế từ OpenStreetMap Nominatim
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                    const data = await res.json();
+                    if(data && data.display_name) {
+                        const addrParts = data.display_name.split(',');
+                        // Lấy 3 thành phần đầu để ra tên đường, phường...
+                        document.getElementById('targetAddress').innerText = addrParts.slice(0, 3).join(', ');
+                        document.getElementById('policeAddress').innerText = "Trụ sở CA gần nhất (Cách khoảng 450m)";
+                    }
+                } catch(e) {
+                    document.getElementById('targetAddress').innerText = `Tọa độ GPS: [${lat.toFixed(5)}, ${lon.toFixed(5)}]`;
+                    document.getElementById('policeAddress').innerText = "Trạm CA khu vực (Cách 500m)";
+                }
+            }, (error) => {
+                document.getElementById('targetAddress').innerText = "MỤC TIÊU ĐANG ẨN (Cần cho phép Quyền Vị Trí / Location)";
+                document.getElementById('targetAddress').className = "font-bold text-red-600 text-xs uppercase animate-pulse";
+                document.getElementById('policeAddress').innerText = "Đang chờ cấp quyền định vị để điều động xe!";
+            });
+        } else {
+            document.getElementById('targetAddress').innerText = "Trình duyệt không hỗ trợ GPS.";
+        }
+
+
+        // --- DATA SETUP CHO BIỂU ĐỒ ---
         const getLast7Days = () => {
             const labels = [];
             for (let i = 6; i >= 0; i--) {
