@@ -292,99 +292,28 @@
         }
 
 
-        // --- DATA SETUP CHO BIỂU ĐỒ ---
-        const getLast7Days = () => {
-            const labels = [];
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                labels.push(i === 0 ? 'Hôm nay' : `${d.getDate()}/${d.getMonth() + 1}`);
-            }
-            return labels;
-        };
-        const daysLabels = getLast7Days();
-
-        // Màu sắc nghiêm túc
-        const colors = {
-            bo: '#1e40af',    // Blue 800
-            me: '#7e22ce',    // Purple 700
-            khanh: '#047857', // Emerald 700
-            linh: '#b91c1c',  // Red 700
-            ongba: '#d97706'  // Amber 600
-        };
-
-        const baseUserLabels = ['Bố', 'Mẹ', 'Khánh', 'Linh'];
-        const hourlyLabels = ['8h-10h', '10h-12h', '12h-14h', '14h-16h', '16h-18h', '18h-20h', '20h-22h'];
-
-        const originalDailyDatasets = [
-            { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.1, borderWidth: 2, pointRadius: 3 },
-            { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.1, borderWidth: 2, pointRadius: 3 },
-            { id: 'khanh', label: 'Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.1, borderWidth: 2, pointRadius: 3 },
-            { id: 'linh', label: 'Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.1, borderWidth: 2, pointRadius: 3 }
-        ];
-
-        const originalCrossDatasets = [
-            { label: 'Sử dụng TB của Bố', data: [18, 1, 4, 1], backgroundColor: colors.bo },
-            { label: 'Sử dụng TB của Mẹ', data: [0.5, 20, 8, 5], backgroundColor: colors.me },
-            { label: 'Sử dụng TB của Khánh', data: [0, 0, 5, 0], backgroundColor: colors.khanh },
-            { label: 'Sử dụng TB của Linh', data: [0, 0, 0, 6], backgroundColor: colors.linh },
-            { label: 'Sử dụng TB của Ông/Bà', data: [0, 0.5, 3.5, 4.5], backgroundColor: colors.ongba }
-        ];
-
-        const originalHourlyDatasets = [
-            { id: 'bo', label: 'Bố', data: [0.2, 0.4, 1.2, 0.3, 0.5, 0.8, 1.6], borderColor: colors.bo, backgroundColor: colors.bo + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
-            { id: 'me', label: 'Mẹ', data: [0.3, 0.8, 1.5, 0.4, 0.6, 1.2, 1.8], borderColor: colors.me, backgroundColor: colors.me + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
-            { id: 'khanh', label: 'Khánh', data: [0.0, 0.1, 1.8, 0.0, 0.2, 1.4, 2.0], borderColor: colors.khanh, backgroundColor: colors.khanh + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
-            { id: 'linh', label: 'Linh', data: [0.0, 0.2, 1.6, 0.1, 0.4, 1.5, 1.9], borderColor: colors.linh, backgroundColor: colors.linh + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 }
-        ];
-
-        // --- KHỞI TẠO BIỂU ĐỒ ---
-        const commonOptions = {
-            responsive: true, maintainAspectRatio: false,
-            scales: {
-                x: { grid: { color: '#e5e7eb' } },
-                y: { grid: { color: '#e5e7eb' }, beginAtZero: true }
-            }
-        };
-
-        const dailyChart = new Chart(document.getElementById('dailyUsageChart'), {
-            type: 'line', data: { labels: daysLabels, datasets: JSON.parse(JSON.stringify(originalDailyDatasets)) },
-            options: { ...commonOptions, scales: { ...commonOptions.scales, y: { ...commonOptions.scales.y, max: 10 } } }
-        });
-
-        const crossChart = new Chart(document.getElementById('crossUsageChart'), {
-            type: 'bar', data: { labels: baseUserLabels, datasets: JSON.parse(JSON.stringify(originalCrossDatasets)) },
-            options: { ...commonOptions, scales: { x: { stacked: true }, y: { stacked: true } } }
-        });
-
-        const hourlyChart = new Chart(document.getElementById('hourlyUsageChart'), {
-            type: 'line', data: { labels: hourlyLabels, datasets: JSON.parse(JSON.stringify(originalHourlyDatasets)) },
-            options: { ...commonOptions, scales: { ...commonOptions.scales, y: { ...commonOptions.scales.y, max: 2.2 } } }
-        });
-
-
         // --- CẤU HÌNH DỮ LIỆU ĐỘNG (ADMIN CONFIG) ---
-        const defaultConfig = {
+                const defaultConfig = {
             members: {
                 bo: { 
-                    name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-blue-800',
+                    name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: '#1e40af',
                     dob: '07/08/1989', age: 37, job: 'Công nhân viên chức', type: 'adult',
                     weights: { youtube: 15, facebook: 30, zalo: 20, web: 40, tiktok: 10, shopee: 0, call: 5, game: 0, duolingo: 0 }
                 },
                 me: { 
-                    name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-purple-800',
+                    name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân', color: '#7e22ce',
                     dob: '27/11/1989', age: 37, job: 'Công nhân viên chức', type: 'adult',
                     weights: { youtube: 15, facebook: 30, zalo: 20, web: 20, tiktok: 25, shopee: 35, call: 5, game: 0, duolingo: 0 }
                 },
-                linh: { 
-                    name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-red-800',
-                    dob: '08/10/2017', age: 9, className: '4C', school: 'Tiểu học Bình Hàn', teacher: 'Cô Yến', type: 'child',
-                    weights: { youtube: 30, game: 10, tiktok: 0, duolingo: 10, facebook: 15, zalo: 15, web: 0, shopee: 0, call: 10 }
-                },
-                khanh: { 
-                    name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-green-800',
+                child1: { 
+                    name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Máy cá nhân', color: '#047857',
                     dob: '17/04/2029', age: 6, className: '1C', school: 'Tiểu học Bình Hàn', teacher: 'Cô Luyên', type: 'child',
                     weights: { youtube: 40, game: 30, tiktok: 0, duolingo: 10, facebook: 0, zalo: 0, web: 0, shopee: 0, call: 10 }
+                },
+                child2: { 
+                    name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Máy cá nhân', color: '#b91c1c',
+                    dob: '08/10/2017', age: 9, className: '4C', school: 'Tiểu học Bình Hàn', teacher: 'Cô Yến', type: 'child',
+                    weights: { youtube: 30, game: 10, tiktok: 0, duolingo: 10, facebook: 15, zalo: 15, web: 0, shopee: 0, call: 10 }
                 }
             },
             platforms: [
@@ -401,8 +330,8 @@
             violations: {
                 bo: [ "Thức khuya đọc báo qua 23h đêm", "Sử dụng điện thoại trong bữa ăn", "Lướt TikTok âm lượng lớn", "Mua sắm online vượt chỉ tiêu", "Vừa sạc vừa dùng điện thoại" ],
                 me: [ "Thức khuya đọc báo qua 23h đêm", "Sử dụng điện thoại trong bữa ăn", "Lướt TikTok âm lượng lớn", "Mua sắm online vượt chỉ tiêu", "Vừa sạc vừa dùng điện thoại" ],
-                linh: [ "Gọi điện thoại buôn chuyện quá lâu", "Tranh giành đồ chơi với em trai", "Lén dùng TikTok của mẹ", "Vừa làm bài tập vừa nhắn tin", "Không chịu nhường em chơi cùng", "Để âm lượng quá lớn khi xem video", "Không chịu gội đầu" ],
-                khanh: [ "Xem YouTube lúc nghỉ trưa", "Đến giờ không chịu đi tắm", "Chơi game quá nhiều không nghỉ mắt", "Giành điện thoại của chị gái", "Nằm xem điện thoại sát mắt", "Vừa ăn cơm vừa đòi xem điện thoại", "Đánh chị gái" ]
+                child2: [ "Gọi điện thoại buôn chuyện quá lâu", "Tranh giành đồ chơi với em trai", "Lén dùng TikTok của mẹ", "Vừa làm bài tập vừa nhắn tin", "Không chịu nhường em chơi cùng", "Để âm lượng quá lớn khi xem video", "Không chịu gội đầu" ],
+                child1: [ "Xem YouTube lúc nghỉ trưa", "Đến giờ không chịu đi tắm", "Chơi game quá nhiều không nghỉ mắt", "Giành điện thoại của chị gái", "Nằm xem điện thoại sát mắt", "Vừa ăn cơm vừa đòi xem điện thoại", "Đánh chị gái" ]
             },
             penalties: [
                 { violation: "Xem điện thoại > 3 giờ/ngày", penalty: "Úp mặt góc tường 30 phút. Thu máy 1 tuần." },
@@ -412,7 +341,8 @@
             ],
             settings: {
                 minViolationsPerDay: 2,
-                maxViolationsPerDay: 3
+                maxViolationsPerDay: 3,
+                numChildren: 2
             }
         };
 
@@ -420,191 +350,314 @@
         let appConfig;
         try {
             appConfig = JSON.parse(localStorage.getItem('phoneUsageConfig')) || defaultConfig;
+            
+            // Xử lý migrate dữ liệu cũ nếu người dùng đã lưu khanh/linh trong localStorage
+            if(appConfig.members.khanh) {
+                appConfig.members.child1 = appConfig.members.khanh;
+                delete appConfig.members.khanh;
+            }
+            if(appConfig.members.linh) {
+                appConfig.members.child2 = appConfig.members.linh;
+                delete appConfig.members.linh;
+            }
+            if(appConfig.violations.khanh) {
+                appConfig.violations.child1 = appConfig.violations.khanh;
+                delete appConfig.violations.khanh;
+            }
+            if(appConfig.violations.linh) {
+                appConfig.violations.child2 = appConfig.violations.linh;
+                delete appConfig.violations.linh;
+            }
+            if(appConfig.settings.numChildren === undefined) {
+                appConfig.settings.numChildren = 2;
+            }
         } catch (e) {
             appConfig = defaultConfig;
         }
 
-        // Khởi tạo giao diện bằng dữ liệu từ appConfig
-        function initializeDynamicUI() {
-            // 1. Render Combobox
-            const userSelect = document.getElementById('userSelect');
-            // Giữ lại option "all"
-            userSelect.innerHTML = '<option value="all">-- TOÀN BỘ DANH SÁCH --</option>';
-            for (const [key, user] of Object.entries(appConfig.members)) {
-                const opt = document.createElement('option');
-                opt.value = key;
-                opt.textContent = `HỒ SƠ: ${user.name.toUpperCase()}`;
-                userSelect.appendChild(opt);
-            }
-
-            // 2. Render Bảng Hình Phạt
-            const penaltyTbody = document.getElementById('penaltyTableBody');
-            penaltyTbody.innerHTML = '';
-            appConfig.penalties.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                if (index % 2 !== 0) tr.classList.add('bg-gray-50');
-                tr.innerHTML = `
-                    <td class="border border-gray-400 p-2 font-semibold ${item.violation.includes('90%') ? 'text-red-600' : ''}">${item.violation}</td>
-                    <td class="border border-gray-400 p-2 ${item.violation.includes('90%') ? 'text-black font-black uppercase' : 'text-red-700 font-bold'}">${item.penalty}</td>
-                `;
-                penaltyTbody.appendChild(tr);
-            });
-        }
-        initializeDynamicUI();
-
-        // Admin Modal Logic
-        const adminModal = document.getElementById('adminModal');
-        const adminFormContainer = document.getElementById('adminFormContainer');
         
-        document.getElementById('openAdminBtn').addEventListener('click', () => {
-            renderAdminForm();
-            adminModal.classList.remove('hidden');
-        });
-
-        const closeAdmin = () => adminModal.classList.add('hidden');
-        document.getElementById('closeAdminBtn').addEventListener('click', closeAdmin);
-        document.getElementById('cancelAdminBtn').addEventListener('click', closeAdmin);
-
-        document.getElementById('resetConfigBtn').addEventListener('click', () => {
-            if(confirm("Bạn có chắc chắn muốn khôi phục toàn bộ cấu hình về mặc định? Mọi thay đổi sẽ bị mất!")) {
-                localStorage.removeItem('phoneUsageConfig');
-                location.reload();
+        // --- DATA SETUP CHO BIỂU ĐỒ ---
+        const getLast7Days = () => {
+            const labels = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                labels.push(i === 0 ? 'Hôm nay' : `${d.getDate()}/${d.getMonth() + 1}`);
             }
+            return labels;
+        };
+        const daysLabels = getLast7Days();
+
+        // Dữ liệu biểu đồ động dựa trên appConfig
+        const baseUserLabels = Object.values(appConfig.members).map(u => u.name);
+        const hourlyLabels = ['8h-10h', '10h-12h', '12h-14h', '14h-16h', '16h-18h', '18h-20h', '20h-22h'];
+
+        const originalDailyDatasets = Object.keys(appConfig.members).map(key => {
+            const user = appConfig.members[key];
+            const data = Array.from({length: 7}, () => parseFloat((Math.random() * 4 + 1).toFixed(1)));
+            return {
+                id: key, label: user.name, data: data, 
+                borderColor: user.color || '#1e40af', backgroundColor: user.color || '#1e40af', 
+                tension: 0.1, borderWidth: 2, pointRadius: 3
+            };
         });
 
-        function renderAdminForm() {
-            let html = '<div class="space-y-6">';
+        const originalCrossDatasets = Object.keys(appConfig.members).map(key => {
+            const user = appConfig.members[key];
+            const data = Object.keys(appConfig.members).map(k => key === k ? 0 : parseFloat((Math.random() * 5).toFixed(1)));
+            data.push(parseFloat((Math.random() * 5).toFixed(1))); // Cho "Ông/Bà"
+            return {
+                label: 'TB của ' + user.name,
+                data: data,
+                backgroundColor: user.color || '#1e40af'
+            };
+        });
+        
+        // Thêm Ông/Bà vào baseUserLabels cho Cross Chart
+        const crossLabels = [...baseUserLabels, 'Ông/Bà'];
 
-            // 1. Settings
-            html += `
-            <div class="bg-white p-4 border border-gray-300 rounded shadow-sm">
-                <h3 class="font-bold text-lg text-blue-900 border-b pb-2 mb-4">1. Cấu hình mức độ cảnh báo (Random)</h3>
-                <div class="flex gap-4 items-center">
-                    <label class="font-semibold text-sm">Số lỗi vi phạm mỗi ngày (Random):</label>
-                    <input type="number" id="cfg_minV" class="border p-1 w-20 text-center font-bold" value="${appConfig.settings.minViolationsPerDay}">
-                    <span>đến</span>
-                    <input type="number" id="cfg_maxV" class="border p-1 w-20 text-center font-bold" value="${appConfig.settings.maxViolationsPerDay}">
-                </div>
-            </div>`;
+        const originalHourlyDatasets = Object.keys(appConfig.members).map(key => {
+            const user = appConfig.members[key];
+            const data = Array.from({length: 7}, () => parseFloat((Math.random() * 1.5).toFixed(1)));
+            return {
+                id: key, label: user.name, data: data, 
+                borderColor: user.color || '#1e40af', backgroundColor: (user.color || '#1e40af') + '33', 
+                fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2
+            };
+        });
 
-            // 2. Thành viên
-            html += `
-            <div class="bg-white p-4 border border-gray-300 rounded shadow-sm">
-                <h3 class="font-bold text-lg text-blue-900 border-b pb-2 mb-4">2. Thông tin đối tượng giám sát</h3>
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">`;
-            for (const [id, user] of Object.entries(appConfig.members)) {
-                html += `
-                <div class="border p-3 bg-gray-50 border-gray-400">
-                    <h4 class="font-bold text-red-700 uppercase mb-2">Hồ sơ: ${user.name}</h4>
-                    <div class="space-y-2 text-sm font-semibold">
-                        <div class="flex items-center"><span class="w-32">Tên hiển thị:</span><input type="text" id="cfg_mem_${id}_name" class="border flex-grow p-1" value="${user.name}"></div>
-                        <div class="flex items-center"><span class="w-32">Ngày sinh:</span><input type="text" id="cfg_mem_${id}_dob" class="border flex-grow p-1" value="${user.dob}"></div>
-                        <div class="flex items-center"><span class="w-32">Lớp/Nghề nghiệp:</span><input type="text" id="cfg_mem_${id}_work" class="border flex-grow p-1" value="${user.job || user.className}"></div>
+        // --- KHỞI TẠO BIỂU ĐỒ ---
+        const commonOptions = {
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                x: { grid: { color: '#e5e7eb' } },
+                y: { grid: { color: '#e5e7eb' }, beginAtZero: true }
+            }
+        };
+
+        const dailyChart = new Chart(document.getElementById('dailyUsageChart'), {
+            type: 'line', data: { labels: daysLabels, datasets: JSON.parse(JSON.stringify(originalDailyDatasets)) },
+            options: { ...commonOptions, scales: { ...commonOptions.scales, y: { ...commonOptions.scales.y, max: 10 } } }
+        });
+
+        const crossChart = new Chart(document.getElementById('crossUsageChart'), {
+            type: 'bar', data: { labels: crossLabels, datasets: JSON.parse(JSON.stringify(originalCrossDatasets)) },
+            options: { ...commonOptions, scales: { x: { stacked: true }, y: { stacked: true } } }
+        });
+
+        const hourlyChart = new Chart(document.getElementById('hourlyUsageChart'), {
+            type: 'line', data: { labels: hourlyLabels, datasets: JSON.parse(JSON.stringify(originalHourlyDatasets)) },
+            options: { ...commonOptions, scales: { ...commonOptions.scales, y: { ...commonOptions.scales.y, max: 2.2 } } }
+        });
+
+        document.getElementById('userSelect').addEventListener('change', function(e) {
+            const val = e.target.value;
+            const display = document.getElementById('userInfoDisplay');
+            const warningBox = document.getElementById('policeWarningBox');
+            const reportContainer = document.getElementById('reportAndPenaltyContainer');
+            const violationList = document.getElementById('violationList');
+            
+            if (val === 'all' || !val) {
+                display.classList.add('hidden');
+                warningBox.className = 'hidden';
+                reportContainer.classList.add('hidden');
+                
+                dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets));
+                crossChart.data.labels = crossLabels;
+                crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets));
+                hourlyChart.data.datasets = JSON.parse(JSON.stringify(originalHourlyDatasets));
+            } else {
+                const user = appConfig.members[val];
+                
+                // Hiển thị báo cáo vi phạm random
+                const randomViolations = getRandomViolations(val);
+                reportContainer.classList.remove('hidden');
+                violationList.innerHTML = randomViolations.map(v => <li>⚠️ </li>).join('');
+                
+                // Random app data
+                const randomApps = getRandomApps(val);
+                let appsHtml = '';
+                randomApps.forEach(app => {
+                    let textClass = app.percent === 0 ? "text-gray-400 line-through" : "text-gray-700";
+                    let pctClass = app.percent === 0 ? "text-gray-400" : "text-blue-900";
+                    appsHtml += <tr>
+                                    <td class="border p-2 font-semibold  flex items-center gap-2">
+                                        <span class="text-xl "></span> 
+                                    </td>
+                                    <td class="border p-2 font-bold text-center w-24 ">%</td>
+                                 </tr>;
+                });
+
+                let extraInfoHtml = '';
+                if (user.type === 'child') {
+                    extraInfoHtml = 
+                        <tr><th class="border p-2 bg-gray-100 text-left">Ngày tháng năm sinh:</th><td class="border p-2 font-semibold"></td></tr>
+                        <tr><th class="border p-2 bg-gray-100 text-left">Đơn vị học tập:</th><td class="border p-2 font-bold text-gray-800">Lớp  - </td></tr>
+                        <tr><th class="border p-2 bg-gray-100 text-left">Giáo viên chủ nhiệm:</th><td class="border p-2 font-bold text-blue-900"></td></tr>
+                    ;
+                } else {
+                    extraInfoHtml = 
+                        <tr><th class="border p-2 bg-gray-100 text-left">Năm sinh:</th><td class="border p-2 font-semibold"></td></tr>
+                        <tr><th class="border p-2 bg-gray-100 text-left">Nghề nghiệp:</th><td class="border p-2 font-bold text-gray-800"></td></tr>
+                    ;
+                }
+
+                display.innerHTML = 
+                    <div class="bg-gray-200 p-2 font-bold text-gray-800 uppercase text-center border-b border-gray-400">
+                        Hồ sơ viễn thông cá nhân
                     </div>
-                </div>`;
+                    <div class="p-4 flex flex-col xl:flex-row gap-6">
+                        <div class="w-full xl:w-1/2">
+                            <table class="w-full text-sm border-collapse">
+                                <tbody>
+                                    <tr><th class="border p-2 bg-gray-100 text-left w-1/3">Định danh:</th><td class="border p-2 font-black  uppercase text-lg"></td></tr>
+                                    
+                                    <tr><th class="border p-2 bg-gray-100 text-left">Tổng thời lượng (7 ngày):</th><td class="border p-2 font-black text-red-600 text-lg"></td></tr>
+                                    <tr><th class="border p-2 bg-gray-100 text-left">Thiết bị truy cập chính:</th><td class="border p-2 font-bold"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="w-full xl:w-1/2">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr><th colspan="2" class="border p-2 bg-gray-100 text-center">Tỷ lệ truy cập các nền tảng kỹ thuật số</th></tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                ;
+
+                // Cảnh báo fake
+                let progress = Math.floor(Math.random() * 15) + (user.type === 'child' ? 85 : 40);
+                if (progress > 100) progress = 100;
+                
+                warningBox.classList.remove('hidden');
+                if (progress >= 90) {
+                    warningBox.className = "mt-4 bg-red-50 border-2 border-red-700 p-4 shadow-md relative animate-pulse";
+                    warningBox.innerHTML = 
+                        <div class="absolute top-0 right-0 bg-red-600 text-white font-bold text-xs px-2 py-1 uppercase">Cấp độ Đỏ</div>
+                        <h3 class="text-red-800 font-black uppercase border-b-2 border-red-300 pb-2 mb-3 flex items-center text-lg">
+                            <span class="mr-2 text-2xl">🚨</span> CẢNH BÁO GIÁM SÁT ĐẶC BIỆT
+                        </h3>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between font-bold text-red-900">
+                                <span>Mức độ rủi ro:</span>
+                                <span class="text-xl">%</span>
+                            </div>
+                            <div class="w-full bg-gray-300 h-6 border border-red-800 relative overflow-hidden">
+                                <div class="bg-red-600 h-full flex items-center justify-end pr-2 transition-all duration-1000" style="width: %">
+                                    <span class="text-white text-xs">⚠️</span>
+                                </div>
+                            </div>
+                            <p class="text-sm font-bold text-red-700 mt-2 uppercase">YÊU CẦU CÁ NHÂN NGỪNG SỬ DỤNG THIẾT BỊ NGAY LẬP TỨC. XE ĐẶC CHỦNG ĐANG TRÊN ĐƯỜNG DI CHUYỂN!</p>
+                        </div>
+                    ;
+                } else {
+                    warningBox.className = "mt-4 bg-yellow-50 border-2 border-yellow-600 p-4 shadow-md relative";
+                    warningBox.innerHTML = 
+                        <h3 class="text-yellow-700 font-black uppercase border-b-2 border-yellow-200 pb-2 mb-3 flex items-center text-lg">
+                            <span class="mr-2 text-2xl">⚠️</span> CẢNH BÁO GIÁM SÁT
+                        </h3>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between font-bold text-yellow-900">
+                                <span>Mức độ rủi ro:</span>
+                                <span class="text-xl">%</span>
+                            </div>
+                            <div class="w-full bg-gray-300 h-6 border border-yellow-800 relative overflow-hidden">
+                                <div class="bg-yellow-500 h-full transition-all duration-1000" style="width: %"></div>
+                            </div>
+                            <p class="text-sm font-bold text-yellow-800 mt-2 uppercase">Chỉ số nằm trong ngưỡng an toàn. Tiếp tục duy trì.</p>
+                        </div>
+                    ;
+                }
+
+                // --- ĐỒNG BỘ 3 BIỂU ĐỒ ---
+                dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets)).filter(ds => ds.id === val);
+                
+                crossChart.data.labels = [user.name];
+                let index = Object.keys(appConfig.members).indexOf(val);
+                crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({ ...ds, data: [ds.data[index]] }));
+
+                hourlyChart.data.datasets = JSON.parse(JSON.stringify(originalHourlyDatasets)).filter(ds => ds.id === val);
             }
-            html += `</div></div>`;
+            
+            dailyChart.update();
+        crossChart.update();
+            hourlyChart.update();
+        });
 
-            // 3. Lỗi vi phạm
-            html += `
-            <div class="bg-white p-4 border border-gray-300 rounded shadow-sm">
-                <h3 class="font-bold text-lg text-blue-900 border-b pb-2 mb-4">3. Ngân hàng Lỗi vi phạm (Mỗi lỗi 1 dòng)</h3>
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">`;
-            for (const [userId, pool] of Object.entries(appConfig.violations)) {
-                html += `
-                <div>
-                    <label class="font-bold text-gray-700 block mb-1">Mã hồ sơ: ${userId.toUpperCase()}</label>
-                    <textarea id="cfg_viol_${userId}" class="w-full border border-gray-400 p-2 text-sm h-28 focus:outline-none focus:border-blue-500">${pool.join('\n')}</textarea>
-                </div>`;
-            }
-            html += `</div></div>`;
-
-            // 4. Hình phạt
-            html += `
-            <div class="bg-white p-4 border border-gray-300 rounded shadow-sm">
-                <div class="flex justify-between items-center border-b pb-2 mb-4">
-                    <h3 class="font-bold text-lg text-blue-900">4. Bộ Luật Xử Lý Kỷ Luật</h3>
-                    <button type="button" onclick="addPenaltyRow()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-bold">+ Thêm điều luật</button>
-                </div>
-                <div id="cfg_penalty_list" class="space-y-2">`;
-            appConfig.penalties.forEach(p => {
-                html += `
-                <div class="flex gap-2 penalty-row items-center border-b pb-2">
-                    <input type="text" class="border p-2 w-1/3 text-sm p-viol font-semibold" value="${p.violation}" placeholder="Hành vi (VD: Quá 3h)">
-                    <input type="text" class="border p-2 flex-grow text-sm p-pen text-red-700 font-bold" value="${p.penalty}" placeholder="Hình phạt (VD: Úp mặt)">
-                    <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 font-bold rounded" title="Xóa">X</button>
-                </div>`;
-            });
-            html += `</div></div>`;
-
-            // 5. Nền tảng
-            html += `
-            <div class="bg-white p-4 border border-gray-300 rounded shadow-sm">
-                <div class="flex justify-between items-center border-b pb-2 mb-4">
-                    <h3 class="font-bold text-lg text-blue-900">5. Danh sách Nền tảng (Apps)</h3>
-                    <button type="button" onclick="addPlatformRow()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-bold">+ Thêm nền tảng</button>
-                </div>
-                <div id="cfg_platform_list" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">`;
-            appConfig.platforms.forEach(p => {
-                html += `
-                <div class="flex gap-1 platform-row border p-1 bg-gray-50 items-center">
-                    <input type="text" class="border p-1 w-10 text-center p-icon" value="${p.icon}" title="Icon/Emoji">
-                    <input type="text" class="border p-1 w-20 text-xs p-id" value="${p.id}" placeholder="ID (zalo)">
-                    <input type="text" class="border p-1 flex-grow text-sm p-name font-bold text-blue-900" value="${p.name}" placeholder="Tên hiển thị">
-                    <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 font-bold rounded" title="Xóa">X</button>
-                </div>`;
-            });
-            html += `</div></div></div>`;
-
-            adminFormContainer.innerHTML = html;
-        }
-
-        window.addPenaltyRow = function() {
-            const list = document.getElementById('cfg_penalty_list');
-            const div = document.createElement('div');
-            div.className = "flex gap-2 penalty-row items-center border-b pb-2";
-            div.innerHTML = `
-                <input type="text" class="border p-2 w-1/3 text-sm p-viol font-semibold" value="" placeholder="Hành vi">
-                <input type="text" class="border p-2 flex-grow text-sm p-pen text-red-700 font-bold" value="" placeholder="Hình phạt">
-                <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 font-bold rounded" title="Xóa">X</button>
-            `;
-            list.appendChild(div);
-        };
-
-        window.addPlatformRow = function() {
-            const list = document.getElementById('cfg_platform_list');
-            const div = document.createElement('div');
-            div.className = "flex gap-1 platform-row border p-1 bg-gray-50 items-center";
-            div.innerHTML = `
-                <input type="text" class="border p-1 w-10 text-center p-icon" value="❓" title="Icon/Emoji">
-                <input type="text" class="border p-1 w-20 text-xs p-id" value="newapp" placeholder="ID (zalo)">
-                <input type="text" class="border p-1 flex-grow text-sm p-name font-bold text-blue-900" value="App mới" placeholder="Tên hiển thị">
-                <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 font-bold rounded" title="Xóa">X</button>
-            `;
-            list.appendChild(div);
-        };
-
+        // // --- UPDATE TODAY BUTTON ---
         document.getElementById('saveConfigBtn').addEventListener('click', () => {
             // 1. Settings
             appConfig.settings.minViolationsPerDay = parseInt(document.getElementById('cfg_minV').value) || 2;
             appConfig.settings.maxViolationsPerDay = parseInt(document.getElementById('cfg_maxV').value) || 3;
+            let numChildren = parseInt(document.getElementById('cfg_numChildren').value) || 2;
+            appConfig.settings.numChildren = numChildren;
 
-            // 2. Members
-            for (const id in appConfig.members) {
-                appConfig.members[id].name = document.getElementById(`cfg_mem_${id}_name`).value;
-                appConfig.members[id].dob = document.getElementById(`cfg_mem_${id}_dob`).value;
-                if (appConfig.members[id].type === 'adult') {
-                    appConfig.members[id].job = document.getElementById(`cfg_mem_${id}_work`).value;
+            // 2. Members (Dynamic based on numChildren)
+            const newMembers = { 
+                bo: appConfig.members.bo, 
+                me: appConfig.members.me 
+            };
+            
+            // Cập nhật thông tin bố/mẹ nếu có trên form
+            if (document.getElementById(`cfg_mem_bo_name`)) {
+                newMembers.bo.name = document.getElementById(`cfg_mem_bo_name`).value;
+                newMembers.bo.dob = document.getElementById(`cfg_mem_bo_dob`).value;
+                newMembers.bo.job = document.getElementById(`cfg_mem_bo_work`).value;
+            }
+            if (document.getElementById(`cfg_mem_me_name`)) {
+                newMembers.me.name = document.getElementById(`cfg_mem_me_name`).value;
+                newMembers.me.dob = document.getElementById(`cfg_mem_me_dob`).value;
+                newMembers.me.job = document.getElementById(`cfg_mem_me_work`).value;
+            }
+
+            // Xử lý các con
+            for (let i = 1; i <= numChildren; i++) {
+                let cKey = 'child' + i;
+                if (document.getElementById(`cfg_mem_${cKey}_name`)) {
+                    // Cập nhật từ form nếu đã tồn tại
+                    newMembers[cKey] = {
+                        ...appConfig.members[cKey],
+                        name: document.getElementById(`cfg_mem_${cKey}_name`).value,
+                        dob: document.getElementById(`cfg_mem_${cKey}_dob`).value,
+                        className: document.getElementById(`cfg_mem_${cKey}_work`).value
+                    };
                 } else {
-                    appConfig.members[id].className = document.getElementById(`cfg_mem_${id}_work`).value;
+                    // Tạo mới hoàn toàn nếu chưa tồn tại trên form (do tăng số lượng)
+                    const existingChild = appConfig.members[cKey];
+                    if (existingChild) {
+                         newMembers[cKey] = existingChild;
+                    } else {
+                         // Sinh profile mới
+                         const defaultColors = ['#047857', '#b91c1c', '#0369a1', '#a21caf', '#164e63', '#ea580c'];
+                         newMembers[cKey] = {
+                             name: 'Con ' + i, totalTime: '15.0 giờ', favoriteDevice: 'Máy cá nhân', 
+                             color: defaultColors[(i-1) % 6], type: 'child',
+                             dob: '01/01/2015', age: 10, className: '5A', school: 'Tiểu học', teacher: 'Cô A',
+                             weights: { youtube: 30, game: 20, tiktok: 0, duolingo: 10, facebook: 0, zalo: 0, web: 0, shopee: 0, call: 10 }
+                         };
+                    }
                 }
             }
+            appConfig.members = newMembers;
 
-            // 3. Violations
-            for (const id in appConfig.violations) {
-                let text = document.getElementById(`cfg_viol_${id}`).value;
-                appConfig.violations[id] = text.split('\n').map(s => s.trim()).filter(s => s !== '');
+            // 3. Violations (Chỉ lưu các key có trong newMembers)
+            const newViolations = {};
+            for (const id in appConfig.members) {
+                const ta = document.getElementById(`cfg_viol_${id}`);
+                if (ta) {
+                    newViolations[id] = ta.value.split('\n').map(s => s.trim()).filter(s => s !== '');
+                } else if (appConfig.violations[id]) {
+                    newViolations[id] = appConfig.violations[id];
+                } else {
+                    newViolations[id] = ["Chơi game quá thời gian quy định", "Không chịu làm bài tập", "Lười đi tắm"];
+                }
             }
+            appConfig.violations = newViolations;
 
             // 4. Penalties
             const penRows = document.querySelectorAll('.penalty-row');
@@ -633,199 +686,6 @@
             location.reload(); // Tải lại trang để áp dụng
         });
 
-        // --- CÁC HÀM RANDOM ĐỘNG THEO CONFIG ---
-        function getRandomViolations(userId) {
-            let pool = appConfig.violations[userId] || [];
-            if (pool.length === 0) return ["Không có dữ liệu vi phạm"];
-            
-            let min = appConfig.settings.minViolationsPerDay;
-            let max = appConfig.settings.maxViolationsPerDay;
-            let count = Math.floor(Math.random() * (max - min + 1)) + min;
-            count = Math.min(count, pool.length); // Không vượt quá số lỗi hiện có
-            
-            let shuffled = pool.sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        }
-
-        function getRandomApps(userId) {
-            let user = appConfig.members[userId];
-            if (!user) return [];
-            let weights = user.weights || {};
-
-            let appData = appConfig.platforms.map(app => {
-                let baseW = weights[app.id] || 0;
-                let val = baseW > 0 ? baseW + (Math.random() * 10 - 5) : 0; 
-                return { ...app, val: Math.max(0, val) };
-            });
-
-            let total = appData.reduce((sum, app) => sum + app.val, 0);
-            
-            appData = appData.map(app => {
-                let pct = total > 0 && app.val > 0 ? Math.round((app.val / total) * 100) : 0;
-                return { ...app, percent: pct };
-            });
-
-            let actualSum = appData.reduce((sum, app) => sum + app.percent, 0);
-            if (actualSum > 0 && actualSum !== 100) {
-                appData.sort((a,b) => b.percent - a.percent);
-                appData[0].percent += (100 - actualSum);
-            }
-
-            return appData.sort((a, b) => b.percent - a.percent);
-        }
-
-        document.getElementById('userSelect').addEventListener('change', function(e) {
-            const val = e.target.value;
-            const display = document.getElementById('userInfoDisplay');
-            const warningBox = document.getElementById('policeWarningBox');
-            const reportContainer = document.getElementById('reportAndPenaltyContainer');
-            const violationList = document.getElementById('violationList');
-            
-            if (val === 'all' || !val) {
-                display.classList.add('hidden');
-                warningBox.className = 'hidden';
-                reportContainer.classList.add('hidden');
-                
-                dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets));
-                crossChart.data.labels = baseUserLabels;
-                crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets));
-                hourlyChart.data.datasets = JSON.parse(JSON.stringify(originalHourlyDatasets));
-            } else {
-                const user = appConfig.members[val];
-                
-                // Hiển thị báo cáo vi phạm random
-                const randomViolations = getRandomViolations(val);
-                reportContainer.classList.remove('hidden');
-                violationList.innerHTML = randomViolations.map(v => `<li>⚠️ ${v}</li>`).join('');
-                
-                // Random app data
-                const randomApps = getRandomApps(val);
-                let appsHtml = '';
-                randomApps.forEach(app => {
-                    // In xám mờ và gạch ngang nếu 0%
-                    let textClass = app.percent === 0 ? "text-gray-400 line-through" : "text-gray-700";
-                    let pctClass = app.percent === 0 ? "text-gray-400" : "text-blue-900";
-                    
-                    appsHtml += `<tr>
-                                    <td class="border p-2 font-semibold ${textClass} flex items-center gap-2">
-                                        <span class="text-xl ${app.percent === 0 ? 'grayscale opacity-50' : ''}">${app.icon}</span> ${app.name}
-                                    </td>
-                                    <td class="border p-2 font-bold text-center w-24 ${pctClass}">${app.percent}%</td>
-                                 </tr>`;
-                });
-
-                let extraInfoHtml = '';
-                if (val === 'khanh' || val === 'linh') {
-                    extraInfoHtml = `
-                        <tr><th class="border p-2 bg-gray-100 text-left">Ngày tháng năm sinh:</th><td class="border p-2 font-semibold">${user.dob} (<span class="text-red-700">${user.age} tuổi</span>)</td></tr>
-                        <tr><th class="border p-2 bg-gray-100 text-left">Đơn vị học tập:</th><td class="border p-2 font-bold text-gray-800">Lớp ${user.className} - ${user.school}</td></tr>
-                        <tr><th class="border p-2 bg-gray-100 text-left">Giáo viên chủ nhiệm:</th><td class="border p-2 font-bold text-blue-900">${user.teacher}</td></tr>
-                    `;
-                } else {
-                    extraInfoHtml = `
-                        <tr><th class="border p-2 bg-gray-100 text-left">Năm sinh:</th><td class="border p-2 font-semibold">${user.dob} (${user.age} tuổi)</td></tr>
-                        <tr><th class="border p-2 bg-gray-100 text-left">Nghề nghiệp:</th><td class="border p-2 font-bold text-gray-800">${user.job}</td></tr>
-                    `;
-                }
-
-                display.innerHTML = `
-                    <div class="bg-gray-200 p-2 font-bold text-gray-800 uppercase text-center border-b border-gray-400">
-                        Hồ sơ viễn thông cá nhân
-                    </div>
-                    <div class="p-4 flex flex-col xl:flex-row gap-6">
-                        <div class="w-full xl:w-1/2">
-                            <table class="w-full text-sm border-collapse">
-                                <tbody>
-                                    <tr><th class="border p-2 bg-gray-100 text-left w-1/3">Định danh:</th><td class="border p-2 font-black ${user.color} uppercase text-lg">${user.name}</td></tr>
-                                    ${extraInfoHtml}
-                                    <tr><th class="border p-2 bg-gray-100 text-left">Tổng thời lượng (7 ngày):</th><td class="border p-2 font-black text-red-600 text-lg">${user.totalTime}</td></tr>
-                                    <tr><th class="border p-2 bg-gray-100 text-left">Thiết bị truy cập chính:</th><td class="border p-2 font-bold">${user.favoriteDevice}</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="w-full xl:w-1/2">
-                            <table class="w-full text-sm border-collapse">
-                                <thead>
-                                    <tr><th colspan="2" class="border p-2 bg-gray-100 text-center">Tỷ lệ truy cập các nền tảng kỹ thuật số</th></tr>
-                                </thead>
-                                <tbody>
-                                    ${appsHtml}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-                display.classList.remove('hidden');
-
-                // --- TÍNH TOÁN CẢNH BÁO XE THÙNG ---
-                let progress = 0;
-                let isCritical = false;
-                
-                if (val === 'bo' || val === 'me') {
-                    progress = Math.floor(Math.random() * (70 - 50 + 1)) + 50;
-                } else {
-                    progress = Math.floor(Math.random() * (97 - 90 + 1)) + 90;
-                    isCritical = true;
-                }
-
-                if (isCritical) {
-                    warningBox.className = "mt-4 bg-red-50 border-2 border-red-700 p-4 shadow-md relative";
-                    warningBox.innerHTML = `
-                        <h3 class="text-red-700 font-black uppercase border-b-2 border-red-200 pb-2 mb-3 flex items-center text-lg">
-                            <span class="mr-2 text-2xl animate-ping">🚨</span> LỆNH TRIỆU TẬP / CƯỠNG CHẾ
-                        </h3>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex justify-between font-bold text-red-900">
-                                <span>Mức độ vi phạm (Thời lượng):</span>
-                                <span class="text-xl">${progress}%</span>
-                            </div>
-                            <div class="w-full bg-gray-300 h-6 border border-red-800 relative overflow-hidden">
-                                <div class="bg-red-600 h-full flex items-center justify-end pr-2 transition-all duration-1000" style="width: ${progress}%">
-                                    <span class="text-white text-xs">🚔</span>
-                                </div>
-                            </div>
-                            <p class="text-sm font-bold text-red-700 mt-2 uppercase">YÊU CẦU CÁ NHÂN NGỪNG SỬ DỤNG THIẾT BỊ NGAY LẬP TỨC. XE ĐẶC CHỦNG ĐANG TRÊN ĐƯỜNG DI CHUYỂN!</p>
-                        </div>
-                    `;
-                } else {
-                    warningBox.className = "mt-4 bg-yellow-50 border-2 border-yellow-600 p-4 shadow-md relative";
-                    warningBox.innerHTML = `
-                        <h3 class="text-yellow-700 font-black uppercase border-b-2 border-yellow-200 pb-2 mb-3 flex items-center text-lg">
-                            <span class="mr-2 text-2xl">⚠️</span> CẢNH BÁO GIÁM SÁT
-                        </h3>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex justify-between font-bold text-yellow-900">
-                                <span>Mức độ rủi ro:</span>
-                                <span class="text-xl">${progress}%</span>
-                            </div>
-                            <div class="w-full bg-gray-300 h-6 border border-yellow-800 relative overflow-hidden">
-                                <div class="bg-yellow-500 h-full transition-all duration-1000" style="width: ${progress}%"></div>
-                            </div>
-                            <p class="text-sm font-bold text-yellow-800 mt-2 uppercase">Chỉ số nằm trong ngưỡng an toàn. Tiếp tục duy trì.</p>
-                        </div>
-                    `;
-                }
-
-                // --- ĐỒNG BỘ 3 BIỂU ĐỒ ---
-                dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets)).filter(ds => ds.id === val);
-                
-                if (val === 'khanh' || val === 'linh') {
-                    crossChart.data.labels = [baseUserLabels[2], baseUserLabels[3]];
-                    crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({ ...ds, data: [ds.data[2], ds.data[3]] }));
-                } else if (val === 'bo' || val === 'me') {
-                    crossChart.data.labels = [baseUserLabels[0], baseUserLabels[1]];
-                    crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({ ...ds, data: [ds.data[0], ds.data[1]] }));
-                }
-
-                hourlyChart.data.datasets = JSON.parse(JSON.stringify(originalHourlyDatasets)).filter(ds => ds.id === val);
-            }
-            
-            dailyChart.update();
-            crossChart.update();
-            hourlyChart.update();
-        });
-
-        // --- UPDATE TODAY BUTTON ---
         document.getElementById('refreshBtn').addEventListener('click', () => {
             dailyChart.data.datasets.forEach(dataset => {
                 const todayIndex = dataset.data.length - 1;
