@@ -74,11 +74,11 @@
                 <div id="reportAndPenaltyContainer" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                     
                     <!-- Báo cáo hành vi vi phạm (Thay đổi theo user) -->
-                    <div class="panel border-orange-600" id="violationPanel">
+                    <div class="panel border-orange-600 flex flex-col" id="violationPanel">
                         <div class="panel-header bg-orange-700 flex items-center">
                             <span class="mr-2">📋</span> HỒ SƠ LƯU TRỮ HÀNH VI VI PHẠM
                         </div>
-                        <div class="p-4 bg-orange-50 h-full">
+                        <div class="p-4 bg-orange-50 flex-grow">
                             <ul id="violationList" class="list-disc pl-5 space-y-3 text-orange-900 font-medium">
                                 <!-- Sẽ được điền bằng JS -->
                             </ul>
@@ -89,11 +89,11 @@
                     </div>
 
                     <!-- Khung Hình Phạt Mặc Định -->
-                    <div class="panel border-black" id="penaltyPanel">
+                    <div class="panel border-black flex flex-col" id="penaltyPanel">
                         <div class="panel-header bg-black flex items-center">
                             <span class="mr-2">⚖️</span> BỘ LUẬT XỬ LÝ KỶ LUẬT GIA ĐÌNH
                         </div>
-                        <div class="p-4 bg-gray-100 h-full overflow-x-auto">
+                        <div class="p-4 bg-gray-100 flex-grow overflow-x-auto">
                             <table class="w-full text-sm border-collapse border border-gray-400 bg-white shadow-sm min-w-[400px]">
                                 <thead class="bg-gray-800 text-white">
                                     <tr>
