@@ -3,154 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Thời Gian Sử Dụng</title>
+    <title>Cổng Thông Tin Giám Sát Điện Tử</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Nunito', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #fdf2f8; border-radius: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #f472b6; }
-        /* Nền chấm bi mờ dễ thương */
-        .bg-polka {
-            background-color: #f8fafc;
-            background-image: radial-gradient(#cbd5e1 2px, transparent 2px);
-            background-size: 30px 30px;
+        body { font-family: 'Arial', sans-serif; background-color: #e5e7eb; }
+        .gov-header { 
+            background-color: #0f172a; 
+            color: #facc15; 
+            text-align: center; 
+            padding: 20px 10px; 
+            border-bottom: 6px solid #b91c1c; 
         }
+        .panel { background: white; border: 1px solid #9ca3af; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        .panel-header { background: #1e3a8a; color: white; padding: 10px 15px; font-weight: bold; text-transform: uppercase; font-size: 14px; }
+        .panel-header.danger { background: #991b1b; }
+        table.gov-table th { background: #f3f4f6; border: 1px solid #d1d5db; padding: 8px; text-align: left; }
+        table.gov-table td { border: 1px solid #d1d5db; padding: 8px; }
     </style>
 </head>
-<body class="bg-polka p-4 md:p-8 min-h-screen">
-    <div class="max-w-7xl mx-auto space-y-6">
-        
-        <!-- HEADER CUTE -->
-        <div class="bg-white rounded-3xl shadow-xl p-6 border-4 border-dashed border-indigo-300 text-center relative overflow-hidden transform hover:-translate-y-1 transition-transform">
-            <div class="absolute -top-4 -left-4 text-6xl opacity-20 transform -rotate-12">🧸</div>
-            <div class="absolute -bottom-4 -right-4 text-6xl opacity-20 transform rotate-12">🎈</div>
-            <h1 class="text-3xl md:text-4xl font-black text-indigo-600 mb-2 drop-shadow-sm">📱 Gia Đình Vui Vẻ</h1>
-            <p class="text-gray-500 font-bold text-lg">Bảng theo dõi thiết bị di động siêu dễ thương 🌟</p>
+<body>
+    <!-- BANNER CHÍNH PHỦ / CÔNG AN -->
+    <div class="gov-header mb-6">
+        <h3 class="text-sm md:text-base text-white font-bold mb-1 uppercase tracking-widest">
+            Cộng Hòa Xã Hội Chủ Nghĩa Việt Nam<br>Độc lập - Tự do - Hạnh phúc
+        </h3>
+        <hr class="w-32 mx-auto border-gray-400 mb-4 mt-2">
+        <div class="flex justify-center items-center gap-4">
+            <h1 class="text-2xl md:text-3xl font-black uppercase tracking-wide">
+                Hệ Thống Giám Sát Viễn Thông & Thời Gian Sử Dụng
+            </h1>
         </div>
+        <p class="text-white mt-2 font-bold text-sm opacity-90">CƠ QUAN QUẢN LÝ TÍN HIỆU: CÔNG AN PHƯỜNG SỞ TẠI</p>
+    </div>
 
+    <div class="max-w-7xl mx-auto space-y-6 px-4 pb-8">
+        
         <!-- BẢNG ĐIỀU KHIỂN -->
-        <div class="bg-white rounded-3xl shadow-xl p-4 md:p-6 border-4 border-yellow-300">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="w-full md:w-1/3">
-                    <label for="userSelect" class="block text-lg font-black text-yellow-600 mb-2 flex items-center">
-                        🔍 Chọn thành viên:
-                    </label>
-                    <select id="userSelect" class="block w-full px-4 py-3 text-lg font-bold border-4 border-yellow-200 focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:border-yellow-400 rounded-2xl bg-yellow-50 cursor-pointer shadow-sm text-gray-700 appearance-none">
-                        <option value="all">🌈 Tất cả mọi người 🌈</option>
-                        <option value="bo">👨 Bố</option>
-                        <option value="me">👩 Mẹ</option>
-                        <option value="khanh">👦 Nhật Khánh</option>
-                        <option value="linh">👧 Nhật Linh</option>
+        <div class="panel">
+            <div class="panel-header flex items-center">
+                <span class="mr-2">🔎</span> Trích Xuất Dữ Liệu Giám Sát Đối Tượng
+            </div>
+            <div class="p-4 md:p-6 bg-gray-50">
+                <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                    <label for="userSelect" class="font-bold text-gray-800 uppercase text-sm">Mã định danh (Họ tên):</label>
+                    <select id="userSelect" class="border-2 border-gray-400 p-2 w-full md:w-64 bg-white font-bold text-blue-900 shadow-inner uppercase">
+                        <option value="all">-- TOÀN BỘ DANH SÁCH --</option>
+                        <option value="bo">ĐỐI TƯỢNG: BỐ</option>
+                        <option value="me">ĐỐI TƯỢNG: MẸ</option>
+                        <option value="khanh">ĐỐI TƯỢNG: NHẬT KHÁNH</option>
+                        <option value="linh">ĐỐI TƯỢNG: NHẬT LINH</option>
                     </select>
                 </div>
-                <div class="text-gray-400 font-bold bg-gray-50 p-3 rounded-xl border-2 border-dashed border-gray-200">
-                    💡 Mẹo: Nhấp vào tên để xem thành tích!
+                <p class="text-xs text-red-600 font-bold mt-2 italic">* Cảnh báo: Mọi truy cập đều được ghi log tại máy chủ của Bộ Công An.</p>
+
+                <!-- Khu vực hiển thị thông tin chi tiết -->
+                <div id="userInfoDisplay" class="mt-6 hidden border border-gray-300 bg-white">
+                    <!-- Data will be injected here -->
                 </div>
-            </div>
 
-            <!-- Khu vực hiển thị thông tin chi tiết -->
-            <div id="userInfoDisplay" class="mt-6 hidden grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-300 border-t-4 border-dotted border-gray-200 pt-6">
-                <!-- Data will be injected here -->
+                <!-- CẢNH BÁO LÊN ĐỒN CÔNG AN -->
+                <div id="policeWarningBox" class="hidden mt-6"></div>
             </div>
-
-            <!-- CẢNH BÁO LÊN ĐỒN CÔNG AN -->
-            <div id="policeWarningBox" class="hidden"></div>
         </div>
 
-        <!-- 4 WIDGET LỚN -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- CÁC BIỂU ĐỒ & BẢN ĐỒ -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
-            <!-- Biểu đồ 1: Line Chart -->
-            <div class="bg-white rounded-3xl shadow-xl p-4 md:p-6 border-4 border-blue-300 hover:shadow-2xl transition-shadow">
-                <h2 class="text-xl font-black text-center text-blue-500 mb-1">📈 7 Ngày Gần Nhất</h2>
-                <div class="relative h-[320px] w-full mt-4">
+            <!-- Biểu đồ 1 -->
+            <div class="panel">
+                <div class="panel-header">📈 Biểu đồ tần suất hoạt động (7 ngày)</div>
+                <div class="p-4 h-[320px] bg-white">
                     <canvas id="dailyUsageChart"></canvas>
                 </div>
             </div>
 
-            <!-- Biểu đồ 2: Stacked Bar -->
-            <div class="bg-white rounded-3xl shadow-xl p-4 md:p-6 border-4 border-pink-300 hover:shadow-2xl transition-shadow">
-                <h2 class="text-xl font-black text-center text-pink-500 mb-1">🔄 Ai mượn máy ai?</h2>
-                <div class="relative h-[320px] w-full mt-4">
+            <!-- Biểu đồ 2 -->
+            <div class="panel">
+                <div class="panel-header">🔄 Trao đổi & mượn thiết bị liên đới</div>
+                <div class="p-4 h-[320px] bg-white">
                     <canvas id="crossUsageChart"></canvas>
                 </div>
             </div>
 
-            <!-- Biểu đồ 3: Area Chart -->
-            <div class="bg-white rounded-3xl shadow-xl p-4 md:p-6 border-4 border-green-300 hover:shadow-2xl transition-shadow">
-                <h2 class="text-xl font-black text-center text-green-500 mb-1">⏱️ Khung Giờ Yêu Thích</h2>
-                <p class="text-sm font-bold text-center text-green-600 mb-2 opacity-70">Sáng - Trưa - Tối (8h-22h)</p>
-                <div class="relative h-[290px] w-full">
+            <!-- Biểu đồ 3 -->
+            <div class="panel">
+                <div class="panel-header">⏱️ Mật độ trực tuyến theo khung giờ</div>
+                <div class="p-4 h-[320px] bg-white">
                     <canvas id="hourlyUsageChart"></canvas>
                 </div>
             </div>
 
-            <!-- WIDGET 4: BẢN ĐỒ CÔNG AN -->
-            <div class="bg-white rounded-3xl shadow-xl p-4 md:p-6 border-4 border-dashed border-red-400 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-red-100 rounded-full blur-3xl opacity-50"></div>
-                <h2 class="text-2xl font-black text-center text-red-600 mb-4 flex items-center justify-center">
-                    🚓 Trụ Sở Công An 🚓
-                </h2>
-                
-                <!-- Mock Map -->
-                <div class="relative bg-blue-50 h-32 rounded-2xl border-4 border-blue-200 mb-4 overflow-hidden flex items-center justify-center group-hover:scale-[1.02] transition-transform">
-                    <!-- SVG Lưới bản đồ -->
-                    <svg class="absolute inset-0 w-full h-full text-blue-100" fill="none" stroke="currentColor" viewBox="0 0 100 100" opacity="0.5">
-                        <path stroke-width="2" d="M0,20 h100 M0,40 h100 M0,60 h100 M0,80 h100 M20,0 v100 M40,0 v100 M60,0 v100 M80,0 v100"></path>
-                        <path stroke-width="4" stroke="gray" d="M10,90 Q40,40 90,10" fill="none"></path>
-                    </svg>
-                    <!-- Marker Công An -->
-                    <div class="z-10 text-center flex flex-col items-center animate-bounce">
-                        <span class="text-4xl drop-shadow-lg">🏢</span>
-                        <p class="font-black text-red-700 bg-white px-3 py-1 rounded-full shadow-lg border-2 border-red-200 text-xs mt-1">Đồn CA Phường</p>
-                    </div>
+            <!-- Bản Đồ Công An -->
+            <div class="panel border-red-700">
+                <div class="panel-header danger flex justify-between items-center">
+                    <span>🚨 ĐƠN VỊ PHỤ TRÁCH ĐỊA BÀN</span>
+                    <span class="animate-pulse w-3 h-3 bg-red-500 rounded-full border border-white"></span>
                 </div>
+                <div class="p-4 bg-gray-50">
+                    <!-- Bản đồ giả lập -->
+                    <div class="bg-gray-300 h-32 rounded flex flex-col items-center justify-center border-2 border-gray-400 mb-4 relative overflow-hidden" style="background-image: repeating-linear-gradient(45deg, #cbd5e1 25%, transparent 25%, transparent 75%, #cbd5e1 75%, #cbd5e1), repeating-linear-gradient(45deg, #cbd5e1 25%, #e2e8f0 25%, #e2e8f0 75%, #cbd5e1 75%, #cbd5e1); background-size: 20px 20px;">
+                        <span class="text-4xl drop-shadow-md relative z-10 animate-bounce">📍</span>
+                        <div class="bg-white px-2 py-1 border border-black font-bold text-xs uppercase shadow relative z-10 mt-1">Trụ Sở Công An Phường</div>
+                    </div>
 
-                <!-- Info Cards -->
-                <div class="bg-red-50 rounded-2xl p-4 border-2 border-red-100 space-y-3">
-                    <div class="flex items-center bg-white p-3 rounded-xl shadow-sm">
-                        <div class="bg-red-100 p-2 rounded-full mr-3"><span class="text-xl">👮‍♂️</span></div>
-                        <div>
-                            <p class="text-xs text-red-500 font-bold uppercase tracking-wider">Người phụ trách</p>
-                            <p class="text-lg font-black text-gray-800">Đồng chí Thành</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center bg-white p-3 rounded-xl shadow-sm">
-                        <div class="bg-red-100 p-2 rounded-full mr-3"><span class="text-xl">📱</span></div>
-                        <div>
-                            <p class="text-xs text-red-500 font-bold uppercase tracking-wider">Số di động Đ/c Thành</p>
-                            <p class="text-lg font-black text-red-600">0988.113.113</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center bg-white p-3 rounded-xl shadow-sm border-l-4 border-red-500">
-                        <div class="bg-red-100 p-2 rounded-full mr-3"><span class="text-xl">🚨</span></div>
-                        <div>
-                            <p class="text-xs text-red-500 font-bold uppercase tracking-wider">Hotline khẩn cấp</p>
-                            <p class="text-2xl font-black text-red-600 animate-pulse">113</p>
-                        </div>
-                    </div>
+                    <!-- Bảng thông tin -->
+                    <table class="gov-table w-full text-sm">
+                        <tbody>
+                            <tr>
+                                <th class="w-1/3">Cán bộ phụ trách:</th>
+                                <td class="font-bold text-gray-800 text-base uppercase">Đ/c Thành</td>
+                            </tr>
+                            <tr>
+                                <th>SĐT Liên hệ trực tiếp:</th>
+                                <td class="font-bold text-blue-800 text-lg">0988.113.113</td>
+                            </tr>
+                            <tr>
+                                <th class="text-red-700">Đường dây nóng:</th>
+                                <td class="font-black text-red-600 text-xl tracking-widest animate-pulse">113</td>
+                            </tr>
+                            <tr>
+                                <th>Chỉ đạo tác chiến:</th>
+                                <td class="text-xs text-gray-600 font-semibold italic">Điều động xe chuyên dụng khi thời lượng vượt ngưỡng 90%.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
         </div>
 
         <!-- Nút Refresh -->
-        <div class="flex flex-col items-center justify-center gap-2 mt-8 pb-8">
-            <button id="refreshBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-black text-xl py-4 px-10 rounded-full shadow-[0_6px_0_0_#4338ca] hover:shadow-[0_2px_0_0_#4338ca] hover:translate-y-1 transition-all flex items-center justify-center w-full md:w-auto">
-                ✨ Cập nhật dữ liệu ✨
+        <div class="flex justify-center mt-6">
+            <button id="refreshBtn" class="bg-blue-900 hover:bg-blue-800 text-white font-bold uppercase tracking-wider py-3 px-8 border-2 border-blue-950 shadow-md transition-colors flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                Truy xuất & Đồng bộ dữ liệu máy chủ
             </button>
         </div>
     </div>
 
     <script>
-        // Set Font cho Chart.js để CUTE hơn
-        Chart.defaults.font.family = 'Nunito';
-        Chart.defaults.font.size = 13;
-        Chart.defaults.font.weight = 'bold';
+        // Set Font cho Chart.js về Arial cho nghiêm túc
+        Chart.defaults.font.family = 'Arial, sans-serif';
+        Chart.defaults.font.size = 12;
 
         // --- DATA SETUP ---
         const getLast7Days = () => {
@@ -164,46 +159,44 @@
         };
         const daysLabels = getLast7Days();
 
-        // Màu Pastel Dễ Thương
+        // Màu sắc nghiêm túc
         const colors = {
-            bo: '#10b981',    // Xanh Mint
-            me: '#a855f7',    // Tím mộng mơ
-            khanh: '#3b82f6', // Xanh da trời
-            linh: '#f43f5e'   // Đỏ dâu tây
+            bo: '#1e40af',    // Blue 800
+            me: '#7e22ce',    // Purple 700
+            khanh: '#047857', // Emerald 700
+            linh: '#b91c1c'   // Red 700
         };
 
         const baseUserLabels = ['Bố', 'Mẹ', 'Khánh', 'Linh'];
         const hourlyLabels = ['8h-10h', '10h-12h', '12h-14h', '14h-16h', '16h-18h', '18h-20h', '20h-22h'];
 
-        // Cấu hình border & point to tròn dễ thương
         const originalDailyDatasets = [
-            { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.5, borderWidth: 4, pointRadius: 6, pointHoverRadius: 8 },
-            { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.5, borderWidth: 4, pointRadius: 6, pointHoverRadius: 8 },
-            { id: 'khanh', label: 'Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.5, borderWidth: 4, pointRadius: 6, pointHoverRadius: 8 },
-            { id: 'linh', label: 'Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.5, borderWidth: 4, pointRadius: 6, pointHoverRadius: 8 }
+            { id: 'bo', label: 'Đối tượng: Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.1, borderWidth: 2, pointRadius: 3 },
+            { id: 'me', label: 'Đối tượng: Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.1, borderWidth: 2, pointRadius: 3 },
+            { id: 'khanh', label: 'Đối tượng: Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.1, borderWidth: 2, pointRadius: 3 },
+            { id: 'linh', label: 'Đối tượng: Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.1, borderWidth: 2, pointRadius: 3 }
         ];
 
         const originalCrossDatasets = [
-            { label: 'Máy Bố', data: [18, 1, 4, 1], backgroundColor: colors.bo, borderRadius: 10 },
-            { label: 'Máy Mẹ', data: [0.5, 20, 8, 5], backgroundColor: colors.me, borderRadius: 10 },
-            { label: 'Máy Khánh', data: [0, 0, 5, 0], backgroundColor: colors.khanh, borderRadius: 10 },
-            { label: 'Máy Linh', data: [0, 0, 0, 6], backgroundColor: colors.linh, borderRadius: 10 }
+            { label: 'Sử dụng TB của Bố', data: [18, 1, 4, 1], backgroundColor: colors.bo },
+            { label: 'Sử dụng TB của Mẹ', data: [0.5, 20, 8, 5], backgroundColor: colors.me },
+            { label: 'Sử dụng TB của Khánh', data: [0, 0, 5, 0], backgroundColor: colors.khanh },
+            { label: 'Sử dụng TB của Linh', data: [0, 0, 0, 6], backgroundColor: colors.linh }
         ];
 
         const originalHourlyDatasets = [
-            { id: 'bo', label: 'Bố', data: [0.2, 0.4, 1.2, 0.3, 0.5, 0.8, 1.6], borderColor: colors.bo, backgroundColor: colors.bo + '40', fill: true, tension: 0.5, borderWidth: 3, pointRadius: 4 },
-            { id: 'me', label: 'Mẹ', data: [0.3, 0.8, 1.5, 0.4, 0.6, 1.2, 1.8], borderColor: colors.me, backgroundColor: colors.me + '40', fill: true, tension: 0.5, borderWidth: 3, pointRadius: 4 },
-            { id: 'khanh', label: 'Khánh', data: [0.0, 0.1, 1.8, 0.0, 0.2, 1.4, 2.0], borderColor: colors.khanh, backgroundColor: colors.khanh + '40', fill: true, tension: 0.5, borderWidth: 3, pointRadius: 4 },
-            { id: 'linh', label: 'Linh', data: [0.0, 0.2, 1.6, 0.1, 0.4, 1.5, 1.9], borderColor: colors.linh, backgroundColor: colors.linh + '40', fill: true, tension: 0.5, borderWidth: 3, pointRadius: 4 }
+            { id: 'bo', label: 'Đối tượng: Bố', data: [0.2, 0.4, 1.2, 0.3, 0.5, 0.8, 1.6], borderColor: colors.bo, backgroundColor: colors.bo + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
+            { id: 'me', label: 'Đối tượng: Mẹ', data: [0.3, 0.8, 1.5, 0.4, 0.6, 1.2, 1.8], borderColor: colors.me, backgroundColor: colors.me + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
+            { id: 'khanh', label: 'Đối tượng: Khánh', data: [0.0, 0.1, 1.8, 0.0, 0.2, 1.4, 2.0], borderColor: colors.khanh, backgroundColor: colors.khanh + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 },
+            { id: 'linh', label: 'Đối tượng: Linh', data: [0.0, 0.2, 1.6, 0.1, 0.4, 1.5, 1.9], borderColor: colors.linh, backgroundColor: colors.linh + '33', fill: true, tension: 0.1, borderWidth: 1, pointRadius: 2 }
         ];
-
 
         // --- KHỞI TẠO BIỂU ĐỒ ---
         const commonOptions = {
             responsive: true, maintainAspectRatio: false,
             scales: {
-                x: { grid: { display: false } },
-                y: { grid: { borderDash: [5, 5] }, beginAtZero: true }
+                x: { grid: { color: '#e5e7eb' } },
+                y: { grid: { color: '#e5e7eb' }, beginAtZero: true }
             }
         };
 
@@ -214,7 +207,7 @@
 
         const crossChart = new Chart(document.getElementById('crossUsageChart'), {
             type: 'bar', data: { labels: baseUserLabels, datasets: JSON.parse(JSON.stringify(originalCrossDatasets)) },
-            options: { ...commonOptions, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { borderDash: [5, 5] } } } }
+            options: { ...commonOptions, scales: { x: { stacked: true }, y: { stacked: true } } }
         });
 
         const hourlyChart = new Chart(document.getElementById('hourlyUsageChart'), {
@@ -225,22 +218,10 @@
 
         // --- LOGIC LỌC COMBOBOX ---
         const userDetails = {
-            bo: {
-                name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Chỉ dùng máy cá nhân', color: 'text-green-600', bgColor: 'bg-green-100', icon: '👨', border: 'border-green-300',
-                apps: [{ name: 'Đọc báo / Web', percent: '40%' }, { name: 'Zalo', percent: '30%' }, { name: 'YouTube', percent: '20%' }]
-            },
-            me: {
-                name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân & Máy Bố', color: 'text-purple-600', bgColor: 'bg-purple-100', icon: '👩', border: 'border-purple-300',
-                apps: [{ name: 'Facebook', percent: '40%' }, { name: 'TikTok', percent: '35%' }, { name: 'Shopee', percent: '15%' }]
-            },
-            khanh: {
-                name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Mượn điện thoại Mẹ', color: 'text-blue-600', bgColor: 'bg-blue-100', icon: '👦', border: 'border-blue-300',
-                apps: [{ name: 'YouTube', percent: '35%' }, { name: 'Poki (Game)', percent: '25%' }, { name: 'Duolingo', percent: '20%' }, { name: 'Zalo', percent: '10%' }, { name: 'Phone', percent: '10%' }]
-            },
-            linh: {
-                name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Mượn điện thoại Mẹ', color: 'text-pink-600', bgColor: 'bg-pink-100', icon: '👧', border: 'border-pink-300',
-                apps: [{ name: 'Facebook', percent: '30%' }, { name: 'Messenger', percent: '25%' }, { name: 'YouTube', percent: '20%' }, { name: 'Zalo', percent: '15%' }, { name: 'Duolingo', percent: '10%' }]
-            }
+            bo: { name: 'Bố', totalTime: '20.5 giờ', favoriteDevice: 'Máy cá nhân', color: 'text-blue-800', apps: [{ name: 'Trình duyệt Web', percent: '40%' }, { name: 'Zalo', percent: '30%' }, { name: 'YouTube', percent: '20%' }] },
+            me: { name: 'Mẹ', totalTime: '28.0 giờ', favoriteDevice: 'Máy cá nhân & Máy Bố', color: 'text-purple-800', apps: [{ name: 'Facebook', percent: '40%' }, { name: 'TikTok', percent: '35%' }, { name: 'Shopee', percent: '15%' }] },
+            khanh: { name: 'Nhật Khánh', totalTime: '18.7 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-green-800', apps: [{ name: 'YouTube', percent: '35%' }, { name: 'Trò chơi điện tử (Poki)', percent: '25%' }, { name: 'Duolingo', percent: '20%' }, { name: 'Zalo', percent: '10%' }, { name: 'Cuộc gọi/Tin nhắn', percent: '10%' }] },
+            linh: { name: 'Nhật Linh', totalTime: '20.8 giờ', favoriteDevice: 'Thiết bị của Mẹ', color: 'text-red-800', apps: [{ name: 'Facebook', percent: '30%' }, { name: 'Messenger', percent: '25%' }, { name: 'YouTube', percent: '20%' }, { name: 'Zalo', percent: '15%' }, { name: 'Duolingo', percent: '10%' }] }
         };
 
         document.getElementById('userSelect').addEventListener('change', function(e) {
@@ -259,34 +240,40 @@
             } else {
                 const user = userDetails[val];
                 
-                const appsHtml = user.apps.map(app => 
-                    `<div class="bg-white p-2 flex justify-between items-center rounded-xl border-2 ${user.border} shadow-sm">
-                        <span class="text-gray-700 font-bold text-sm">${app.name}</span>
-                        <span class="${user.color} font-black text-sm bg-white px-2 rounded-lg shadow-inner">${app.percent}</span>
-                    </div>`
-                ).join('');
+                let appsHtml = '';
+                user.apps.forEach(app => {
+                    appsHtml += `<tr><td class="border p-2 font-semibold text-gray-700">${app.name}</td><td class="border p-2 font-bold text-center w-24">${app.percent}</td></tr>`;
+                });
 
                 display.innerHTML = `
-                    <div class="p-6 rounded-3xl ${user.bgColor} flex flex-col justify-center items-center border-4 ${user.border} transform hover:scale-105 transition-transform">
-                        <span class="text-6xl mb-2 drop-shadow-md">${user.icon}</span>
-                        <h3 class="font-black text-2xl ${user.color}">${user.name}</h3>
+                    <div class="bg-gray-200 p-2 font-bold text-gray-800 uppercase text-center border-b border-gray-400">
+                        Hồ sơ viễn thông đối tượng
                     </div>
-                    <div class="p-4 rounded-3xl border-4 ${user.border} bg-white flex flex-col justify-center text-center">
-                        <p class="text-sm text-gray-500 font-black uppercase tracking-wide">Tổng thời gian (7 ngày)</p>
-                        <p class="text-4xl font-black ${user.color} mt-2 drop-shadow-sm">${user.totalTime}</p>
-                        <p class="text-sm text-gray-500 font-black uppercase tracking-wide mt-4">Thiết bị hay mượn</p>
-                        <p class="font-black text-gray-700 mt-1">${user.favoriteDevice}</p>
-                    </div>
-                    <div class="p-4 rounded-3xl border-4 ${user.border} bg-white flex flex-col">
-                        <p class="text-sm text-gray-500 font-black uppercase tracking-wide mb-3 text-center">App Dùng Nhiều Nhất</p>
-                        <div class="space-y-2 overflow-y-auto max-h-[140px] pr-2 custom-scrollbar">
-                            ${appsHtml}
+                    <div class="p-4 flex flex-col md:flex-row gap-6">
+                        <div class="w-full md:w-1/2">
+                            <table class="w-full text-sm border-collapse">
+                                <tbody>
+                                    <tr><th class="border p-2 bg-gray-100 text-left w-1/2">Định danh:</th><td class="border p-2 font-black ${user.color} uppercase text-lg">${user.name}</td></tr>
+                                    <tr><th class="border p-2 bg-gray-100 text-left">Tổng thời lượng (7 ngày):</th><td class="border p-2 font-black text-red-600 text-lg">${user.totalTime}</td></tr>
+                                    <tr><th class="border p-2 bg-gray-100 text-left">Thiết bị truy cập chính:</th><td class="border p-2 font-bold">${user.favoriteDevice}</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="w-full md:w-1/2">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr><th colspan="2" class="border p-2 bg-gray-100 text-center">Nền tảng tiêu thụ dữ liệu cao nhất</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${appsHtml}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 `;
                 display.classList.remove('hidden');
 
-                // --- HIỂN THỊ CẢNH BÁO XE THÙNG CÔNG AN ---
+                // --- TÍNH TOÁN CẢNH BÁO XE THÙNG ---
                 let progress = 0;
                 let isCritical = false;
                 
@@ -297,39 +284,43 @@
                     isCritical = true;
                 }
 
-                let boxClasses = isCritical 
-                    ? "mt-6 bg-red-50 rounded-3xl shadow-xl p-6 border-4 border-dashed border-red-500 transition-all relative overflow-hidden" 
-                    : "mt-6 bg-orange-50 rounded-3xl shadow-xl p-6 border-4 border-dashed border-orange-300 transition-all relative overflow-hidden";
-
-                let barGradient = isCritical
-                    ? "from-yellow-400 via-orange-500 to-red-600"
-                    : "from-green-400 via-yellow-400 to-orange-500";
-                    
-                let warningMsg = isCritical 
-                    ? "🚨 Nguy hiểm quá! Sắp có xe thùng đến tận nhà đón rồi! 🚨"
-                    : "🌟 Đang ở mức an toàn. Nhớ làm gương cho các con nhé! 🌟";
-                    
-                let bgPulse = isCritical ? '<div class="absolute inset-0 bg-red-500 opacity-20 animate-pulse pointer-events-none"></div>' : '';
-
-                warningBox.className = boxClasses;
-                warningBox.innerHTML = `
-                    ${bgPulse}
-                    <div class="relative z-10 flex flex-col md:flex-row justify-between md:items-end mb-4">
-                        <h3 class="text-xl font-black ${isCritical ? 'text-red-700' : 'text-orange-700'} flex items-center mb-2 md:mb-0">
-                            Nguy Cơ Mời Lên Đồn Công An
+                if (isCritical) {
+                    warningBox.className = "mt-4 bg-red-50 border-2 border-red-700 p-4 shadow-md relative";
+                    warningBox.innerHTML = `
+                        <h3 class="text-red-700 font-black uppercase border-b-2 border-red-200 pb-2 mb-3 flex items-center text-lg">
+                            <span class="mr-2 text-2xl animate-ping">🚨</span> LỆNH TRIỆU TẬP / CƯỠNG CHẾ
                         </h3>
-                        <div class="flex items-center bg-white px-4 py-2 rounded-full shadow-md border-2 ${isCritical ? 'border-red-300' : 'border-orange-300'}">
-                            <span class="text-3xl mr-2 animate-bounce">🚓</span>
-                            <span class="${isCritical ? 'text-red-600' : 'text-orange-600'} font-black text-3xl drop-shadow-sm">${progress}%</span>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between font-bold text-red-900">
+                                <span>Mức độ vi phạm (Thời lượng):</span>
+                                <span class="text-xl">${progress}%</span>
+                            </div>
+                            <div class="w-full bg-gray-300 h-6 border border-red-800 relative overflow-hidden">
+                                <div class="bg-red-600 h-full flex items-center justify-end pr-2 transition-all duration-1000" style="width: ${progress}%">
+                                    <span class="text-white text-xs">🚔</span>
+                                </div>
+                            </div>
+                            <p class="text-sm font-bold text-red-700 mt-2 uppercase">YÊU CẦU ĐỐI TƯỢNG NGỪNG SỬ DỤNG THIẾT BỊ NGAY LẬP TỨC. XE ĐẶC CHỦNG ĐANG TRÊN ĐƯỜNG DI CHUYỂN!</p>
                         </div>
-                    </div>
-                    <div class="relative z-10 w-full bg-gray-200 rounded-full h-6 shadow-inner overflow-hidden border-2 border-white">
-                        <div class="bg-gradient-to-r ${barGradient} h-6 rounded-full transition-all duration-1000 ease-out flex justify-end items-center pr-2" style="width: ${progress}%">
-                            <div class="w-2 h-2 bg-white rounded-full animate-ping"></div>
+                    `;
+                } else {
+                    warningBox.className = "mt-4 bg-yellow-50 border-2 border-yellow-600 p-4 shadow-md relative";
+                    warningBox.innerHTML = `
+                        <h3 class="text-yellow-700 font-black uppercase border-b-2 border-yellow-200 pb-2 mb-3 flex items-center text-lg">
+                            <span class="mr-2 text-2xl">⚠️</span> CẢNH BÁO GIÁM SÁT
+                        </h3>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between font-bold text-yellow-900">
+                                <span>Mức độ rủi ro:</span>
+                                <span class="text-xl">${progress}%</span>
+                            </div>
+                            <div class="w-full bg-gray-300 h-6 border border-yellow-800 relative overflow-hidden">
+                                <div class="bg-yellow-500 h-full transition-all duration-1000" style="width: ${progress}%"></div>
+                            </div>
+                            <p class="text-sm font-bold text-yellow-800 mt-2 uppercase">Chỉ số nằm trong ngưỡng an toàn. Tiếp tục duy trì.</p>
                         </div>
-                    </div>
-                    <p class="relative z-10 text-center ${isCritical ? 'text-red-600' : 'text-orange-600'} mt-4 font-black text-lg drop-shadow-sm">${warningMsg}</p>
-                `;
+                    `;
+                }
 
                 // --- ĐỒNG BỘ 3 BIỂU ĐỒ ---
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets)).filter(ds => ds.id === val);
@@ -361,19 +352,23 @@
 
             const btn = document.getElementById('refreshBtn');
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = '✨ Đã Cập Nhật! ✨';
-            btn.classList.replace('bg-indigo-500', 'bg-pink-500');
-            btn.classList.replace('hover:bg-indigo-600', 'hover:bg-pink-600');
-            btn.classList.replace('shadow-[0_6px_0_0_#4338ca]', 'shadow-[0_6px_0_0_#be185d]');
-            btn.classList.replace('hover:shadow-[0_2px_0_0_#4338ca]', 'hover:shadow-[0_2px_0_0_#be185d]');
+            btn.innerHTML = 'ĐANG ĐỒNG BỘ...';
+            btn.classList.add('opacity-75');
             
             setTimeout(() => {
-                btn.innerHTML = originalHTML;
-                btn.classList.replace('bg-pink-500', 'bg-indigo-500');
-                btn.classList.replace('hover:bg-pink-600', 'hover:bg-indigo-600');
-                btn.classList.replace('shadow-[0_6px_0_0_#be185d]', 'shadow-[0_6px_0_0_#4338ca]');
-                btn.classList.replace('hover:shadow-[0_2px_0_0_#be185d]', 'hover:shadow-[0_2px_0_0_#4338ca]');
-            }, 1000);
+                btn.innerHTML = 'ĐỒNG BỘ HOÀN TẤT';
+                btn.classList.replace('bg-blue-900', 'bg-green-700');
+                btn.classList.replace('hover:bg-blue-800', 'hover:bg-green-600');
+                btn.classList.replace('border-blue-950', 'border-green-900');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('opacity-75');
+                    btn.classList.replace('bg-green-700', 'bg-blue-900');
+                    btn.classList.replace('hover:bg-green-600', 'hover:bg-blue-800');
+                    btn.classList.replace('border-green-900', 'border-blue-950');
+                }, 2000);
+            }, 800);
         });
     </script>
 </body>
