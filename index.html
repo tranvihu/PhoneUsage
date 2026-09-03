@@ -124,75 +124,75 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
+                <!-- CÁC BIỂU ĐỒ & BẢN ĐỒ -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                    
+                    <!-- Biểu đồ 1 -->
+                    <div class="panel">
+                        <div class="panel-header">📈 Biểu đồ tần suất hoạt động (7 ngày)</div>
+                        <div class="p-4 h-[320px] bg-white">
+                            <canvas id="dailyUsageChart"></canvas>
+                        </div>
+                    </div>
 
-        <!-- CÁC BIỂU ĐỒ & BẢN ĐỒ -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            <!-- Biểu đồ 1 -->
-            <div class="panel">
-                <div class="panel-header">📈 Biểu đồ tần suất hoạt động (7 ngày)</div>
-                <div class="p-4 h-[320px] bg-white">
-                    <canvas id="dailyUsageChart"></canvas>
+                    <!-- Biểu đồ 2 -->
+                    <div class="panel">
+                        <div class="panel-header">🔄 Trao đổi & mượn thiết bị liên đới</div>
+                        <div class="p-4 h-[320px] bg-white">
+                            <canvas id="crossUsageChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Biểu đồ 3 -->
+                    <div class="panel">
+                        <div class="panel-header">⏱️ Mật độ trực tuyến theo khung giờ</div>
+                        <div class="p-4 h-[320px] bg-white">
+                            <canvas id="hourlyUsageChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Bản Đồ Công An (THỰC TẾ) -->
+                    <div class="panel border-red-700">
+                        <div class="panel-header danger flex justify-between items-center">
+                            <span>🚨 ĐƠN VỊ PHỤ TRÁCH ĐỊA BÀN & ĐỊNH VỊ GPS</span>
+                            <span class="animate-pulse w-3 h-3 bg-red-500 rounded-full border border-white"></span>
+                        </div>
+                        <div class="p-4 bg-gray-50">
+                            <!-- Bản đồ thực tế (Leaflet) -->
+                            <div id="realMap" class="h-48 rounded border-2 border-gray-400 mb-4 z-0 shadow-inner"></div>
+
+                            <!-- Bảng thông tin -->
+                            <table class="gov-table w-full text-sm">
+                                <tbody>
+                                    <tr>
+                                        <th class="w-1/3">Cán bộ phụ trách:</th>
+                                        <td class="font-bold text-gray-800 text-base uppercase">Đ/c Thành</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-blue-900">Địa chỉ giám sát:</th>
+                                        <td id="targetAddress" class="font-bold text-gray-800 text-xs italic text-blue-700">Đang khởi động hệ thống định vị vệ tinh GPS...</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-red-800">Trụ sở Công An:</th>
+                                        <td id="policeAddress" class="font-bold text-gray-800 text-xs text-red-700">Đang quét khu vực lân cận...</td>
+                                    </tr>
+                                    <tr>
+                                        <th>SĐT Liên hệ trực tiếp:</th>
+                                        <td class="font-bold text-blue-800 text-lg">0988.113.113</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-red-700">Đường dây nóng:</th>
+                                        <td class="font-black text-red-600 text-xl tracking-widest animate-pulse">113</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
 
-            <!-- Biểu đồ 2 -->
-            <div class="panel">
-                <div class="panel-header">🔄 Trao đổi & mượn thiết bị liên đới</div>
-                <div class="p-4 h-[320px] bg-white">
-                    <canvas id="crossUsageChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Biểu đồ 3 -->
-            <div class="panel">
-                <div class="panel-header">⏱️ Mật độ trực tuyến theo khung giờ</div>
-                <div class="p-4 h-[320px] bg-white">
-                    <canvas id="hourlyUsageChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Bản Đồ Công An (THỰC TẾ) -->
-            <div class="panel border-red-700">
-                <div class="panel-header danger flex justify-between items-center">
-                    <span>🚨 ĐƠN VỊ PHỤ TRÁCH ĐỊA BÀN & ĐỊNH VỊ GPS</span>
-                    <span class="animate-pulse w-3 h-3 bg-red-500 rounded-full border border-white"></span>
-                </div>
-                <div class="p-4 bg-gray-50">
-                    <!-- Bản đồ thực tế (Leaflet) -->
-                    <div id="realMap" class="h-48 rounded border-2 border-gray-400 mb-4 z-0 shadow-inner"></div>
-
-                    <!-- Bảng thông tin -->
-                    <table class="gov-table w-full text-sm">
-                        <tbody>
-                            <tr>
-                                <th class="w-1/3">Cán bộ phụ trách:</th>
-                                <td class="font-bold text-gray-800 text-base uppercase">Đ/c Thành</td>
-                            </tr>
-                            <tr>
-                                <th class="text-blue-900">Địa chỉ giám sát:</th>
-                                <td id="targetAddress" class="font-bold text-gray-800 text-xs italic text-blue-700">Đang khởi động hệ thống định vị vệ tinh GPS...</td>
-                            </tr>
-                            <tr>
-                                <th class="text-red-800">Trụ sở Công An:</th>
-                                <td id="policeAddress" class="font-bold text-gray-800 text-xs text-red-700">Đang quét khu vực lân cận...</td>
-                            </tr>
-                            <tr>
-                                <th>SĐT Liên hệ trực tiếp:</th>
-                                <td class="font-bold text-blue-800 text-lg">0988.113.113</td>
-                            </tr>
-                            <tr>
-                                <th class="text-red-700">Đường dây nóng:</th>
-                                <td class="font-black text-red-600 text-xl tracking-widest animate-pulse">113</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
+            </div> <!-- END of main panel body -->
+        </div> <!-- END of main panel -->
 
         <!-- Nút Refresh -->
         <div class="flex justify-center mt-6">
@@ -202,6 +202,22 @@
             </button>
         </div>
     </div>
+
+    <!-- FOOTER CÔNG AN -->
+    <footer class="bg-slate-900 text-white mt-8 py-8 border-t-4 border-red-700">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm gap-6">
+            <div class="text-center md:text-left">
+                <p class="font-bold uppercase text-yellow-500 mb-1 text-lg">CƠ QUAN CÔNG AN PHƯỜNG SỞ TẠI</p>
+                <p class="font-semibold text-gray-300">Hệ thống giám sát viễn thông & an ninh mạng nội bộ</p>
+                <p class="text-gray-500 mt-2 text-xs">Phiên bản 2.4.1 (Cập nhật liên tục theo thời gian thực)</p>
+            </div>
+            <div class="text-center md:text-right">
+                <p class="font-black text-red-500 text-xl tracking-wider">ĐƯỜNG DÂY NÓNG: 113</p>
+                <p class="text-gray-300 mt-1">Hỗ trợ kỹ thuật: hotro@mps.gov.vn</p>
+                <p class="text-gray-500 mt-2 text-xs">© Bản quyền thuộc về Bộ Công An Việt Nam</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // Set Font cho Chart.js về Roboto
@@ -393,9 +409,10 @@
 
         function getRandomApps(userId) {
             let weights = {};
-            if (userId === 'khanh' || userId === 'linh') {
-                weights = { youtube: 40, game: 30, tiktok: 20, duolingo: 10, facebook: 0, zalo: 0, web: 0, shopee: 0, call: 0 };
-                if (userId === 'linh') { weights.facebook = 15; weights.game = 10; weights.call = 5; }
+            if (userId === 'khanh') {
+                weights = { youtube: 40, game: 30, tiktok: 0, duolingo: 10, facebook: 0, zalo: 0, web: 0, shopee: 0, call: 10 };
+            } else if (userId === 'linh') {
+                weights = { youtube: 30, game: 10, tiktok: 0, duolingo: 10, facebook: 15, zalo: 15, web: 0, shopee: 0, call: 10 };
             } else {
                 weights = { youtube: 15, facebook: 30, zalo: 20, web: 20, tiktok: 10, shopee: 10, call: 5, game: 0, duolingo: 0 };
                 if (userId === 'me') { weights.shopee = 35; weights.tiktok = 25; }
