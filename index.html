@@ -14,7 +14,7 @@
             <p class="text-gray-500">Phân tích chi tiết thói quen dùng điện thoại của gia đình</p>
         </div>
 
-        <!-- BẢNG ĐIỀU KHIỂN & COMBOBOX (Đưa lên trên cùng) -->
+        <!-- BẢNG ĐIỀU KHIỂN & COMBOBOX -->
         <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-yellow-400">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div class="w-full md:w-1/3">
@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <!-- Khu vực hiển thị thông tin chi tiết (chỉ hiện khi chọn Khánh/Linh) -->
+            <!-- Khu vực hiển thị thông tin chi tiết -->
             <div id="userInfoDisplay" class="mt-6 hidden grid-cols-1 md:grid-cols-3 gap-4 transition-all duration-300 border-t pt-6">
                 <!-- Data will be injected here -->
             </div>
@@ -81,15 +81,14 @@
         const daysLabels = getLast7Days();
 
         const colors = {
-            bo: '#94a3b8',    // Xám nhạt (Bố)
-            me: '#94a3b8',    // Xám nhạt (Mẹ)
-            khanh: '#3b82f6', // Xanh dương (Khánh)
-            linh: '#ec4899'   // Hồng (Linh)
+            bo: '#94a3b8',    // Xám nhạt
+            me: '#94a3b8',    // Xám nhạt
+            khanh: '#3b82f6', // Xanh dương
+            linh: '#ec4899'   // Hồng
         };
 
         const baseUserLabels = ['Bố', 'Mẹ', 'Nhật Khánh', 'Nhật Linh'];
 
-        // Dữ liệu gốc cho Biểu đồ 1 (Đường)
         const originalDailyDatasets = [
             { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 2, borderDash: [5, 5] },
             { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.4, borderWidth: 2, borderDash: [5, 5] },
@@ -97,7 +96,6 @@
             { id: 'linh', label: 'Nhật Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.4, borderWidth: 4 }
         ];
 
-        // Dữ liệu gốc cho Biểu đồ 2 (Cột chồng)
         const originalCrossDatasets = [
             { label: 'Dùng máy của Bố', data: [18, 1, 4, 1], backgroundColor: colors.bo },
             { label: 'Dùng máy của Mẹ', data: [0.5, 20, 8, 5], backgroundColor: colors.me },
@@ -109,10 +107,7 @@
         const ctxDaily = document.getElementById('dailyUsageChart').getContext('2d');
         const dailyChart = new Chart(ctxDaily, {
             type: 'line',
-            data: {
-                labels: daysLabels,
-                datasets: JSON.parse(JSON.stringify(originalDailyDatasets)) // Clone object
-            },
+            data: { labels: daysLabels, datasets: JSON.parse(JSON.stringify(originalDailyDatasets)) },
             options: {
                 responsive: true, maintainAspectRatio: false,
                 scales: { y: { beginAtZero: true, max: 10 } },
@@ -124,10 +119,7 @@
         const ctxCross = document.getElementById('crossUsageChart').getContext('2d');
         const crossChart = new Chart(ctxCross, {
             type: 'bar',
-            data: {
-                labels: baseUserLabels,
-                datasets: JSON.parse(JSON.stringify(originalCrossDatasets))
-            },
+            data: { labels: baseUserLabels, datasets: JSON.parse(JSON.stringify(originalCrossDatasets)) },
             options: {
                 responsive: true, maintainAspectRatio: false,
                 scales: { x: { stacked: true }, y: { stacked: true } }
@@ -135,15 +127,37 @@
         });
 
 
-        // --- LOGIC LỌC COMBOBOX ---
+        // --- LOGIC LỌC COMBOBOX & DỮ LIỆU APP ---
         const userDetails = {
             khanh: {
-                name: 'Nhật Khánh', totalTime: '18.7 giờ', topApps: 'YouTube (45%), Roblox (30%)',
-                favoriteDevice: 'Thường mượn điện thoại Mẹ', color: 'text-blue-600', bgColor: 'bg-blue-50', icon: '👦'
+                name: 'Nhật Khánh', 
+                totalTime: '18.7 giờ', 
+                favoriteDevice: 'Thường mượn điện thoại Mẹ', 
+                color: 'text-blue-600', 
+                bgColor: 'bg-blue-50', 
+                icon: '👦',
+                apps: [
+                    { name: 'YouTube', percent: '35%' },
+                    { name: 'Poki (Game)', percent: '25%' },
+                    { name: 'Duolingo', percent: '20%' },
+                    { name: 'Zalo', percent: '10%' },
+                    { name: 'Phone / Message', percent: '10%' }
+                ]
             },
             linh: {
-                name: 'Nhật Linh', totalTime: '20.8 giờ', topApps: 'TikTok (50%), Instagram (35%)',
-                favoriteDevice: 'Thường mượn điện thoại Mẹ', color: 'text-pink-600', bgColor: 'bg-pink-50', icon: '👧'
+                name: 'Nhật Linh', 
+                totalTime: '20.8 giờ', 
+                favoriteDevice: 'Thường mượn điện thoại Mẹ', 
+                color: 'text-pink-600', 
+                bgColor: 'bg-pink-50', 
+                icon: '👧',
+                apps: [
+                    { name: 'Facebook', percent: '30%' },
+                    { name: 'Messenger', percent: '25%' },
+                    { name: 'YouTube', percent: '20%' },
+                    { name: 'Zalo', percent: '15%' },
+                    { name: 'Duolingo', percent: '10%' }
+                ]
             }
         };
 
@@ -151,20 +165,23 @@
             const val = e.target.value;
             const display = document.getElementById('userInfoDisplay');
             
-            // Xử lý ẩn/hiện bảng chi tiết
             if (val === 'all' || !val) {
                 display.classList.add('hidden');
                 display.classList.remove('grid');
-                
-                // Khôi phục Biểu đồ 1
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets));
-                
-                // Khôi phục Biểu đồ 2
                 crossChart.data.labels = baseUserLabels;
                 crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets));
             } else {
-                // Render nội dung bảng chi tiết
                 const user = userDetails[val];
+                
+                // Render danh sách app
+                const appsHtml = user.apps.map(app => 
+                    `<div class="bg-white p-2 flex justify-between items-center rounded border border-gray-100 shadow-sm">
+                        <span class="text-gray-800 font-semibold text-sm">${app.name}</span>
+                        <span class="text-indigo-600 font-bold text-sm">${app.percent}</span>
+                    </div>`
+                ).join('');
+
                 display.innerHTML = `
                     <div class="p-4 rounded-xl ${user.bgColor} flex flex-col justify-center items-center border border-gray-100">
                         <span class="text-4xl mb-2">${user.icon}</span>
@@ -172,25 +189,21 @@
                     </div>
                     <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 flex flex-col justify-center">
                         <p class="text-sm text-gray-500 font-medium">Tổng thời gian (7 ngày)</p>
-                        <p class="text-2xl font-bold text-gray-800 mt-1">${user.totalTime}</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-1">${user.totalTime}</p>
                         <p class="text-sm text-gray-500 font-medium mt-4">Thiết bị mượn nhiều nhất</p>
                         <p class="font-semibold text-gray-800 mt-1">${user.favoriteDevice}</p>
                     </div>
-                    <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 flex flex-col justify-center">
-                        <p class="text-sm text-gray-500 font-medium">Ứng dụng tiêu thụ nhiều nhất</p>
-                        <div class="mt-2 space-y-2">
-                            <div class="bg-white p-2 rounded border border-gray-100"><span class="text-gray-800 font-semibold">${user.topApps.split(', ')[0]}</span></div>
-                            <div class="bg-white p-2 rounded border border-gray-100"><span class="text-gray-800 font-semibold">${user.topApps.split(', ')[1]}</span></div>
+                    <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 flex flex-col">
+                        <p class="text-sm text-gray-500 font-medium mb-2">Ứng dụng tiêu thụ nhiều nhất</p>
+                        <div class="space-y-2 overflow-y-auto max-h-[140px] pr-1 custom-scrollbar">
+                            ${appsHtml}
                         </div>
                     </div>
                 `;
                 display.classList.remove('hidden');
                 display.classList.add('grid');
 
-                // Cập nhật Biểu đồ 1 (Chỉ hiện đường của người được chọn)
                 dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets)).filter(ds => ds.id === val);
-
-                // Cập nhật Biểu đồ 2 (Chỉ hiện cột của người được chọn)
                 const targetIndex = val === 'khanh' ? 2 : 3;
                 crossChart.data.labels = [baseUserLabels[targetIndex]];
                 crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({
@@ -199,12 +212,10 @@
                 }));
             }
             
-            // Render lại animation chart
             dailyChart.update();
             crossChart.update();
         });
 
-        // --- LOGIC NÚT CẬP NHẬT ---
         document.getElementById('refreshBtn').addEventListener('click', () => {
             dailyChart.data.datasets.forEach(dataset => {
                 const todayIndex = dataset.data.length - 1;
@@ -224,5 +235,11 @@
             }, 1000);
         });
     </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; rounded: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
 </body>
 </html>
