@@ -684,7 +684,9 @@
         document.getElementById('resetConfigBtn').addEventListener('click', () => {
             if(confirm("Bạn có chắc chắn muốn khôi phục toàn bộ cấu hình về mặc định? Mọi thay đổi sẽ bị mất!")) {
                 localStorage.removeItem('phoneUsageConfig');
-                location.reload();
+                appConfig = JSON.parse(JSON.stringify(defaultConfig));
+                renderAdminForm();
+                alert("Đã khôi phục dữ liệu mặc định trên form. Vui lòng ấn 'Lưu Cấu Hình' để áp dụng chính thức lên hệ thống!");
             }
         });
 
