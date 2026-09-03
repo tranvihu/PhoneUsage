@@ -8,63 +8,62 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-50 font-sans p-4 md:p-8">
-    <div class="max-w-7xl mx-auto space-y-8">
+    <div class="max-w-7xl mx-auto space-y-6">
         <div class="text-center">
             <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">📱 Dashboard Quản Lý Thời Gian Sử Dụng</h1>
             <p class="text-gray-500">Phân tích chi tiết thói quen dùng điện thoại của gia đình</p>
         </div>
 
+        <!-- BẢNG ĐIỀU KHIỂN & COMBOBOX (Đưa lên trên cùng) -->
+        <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-yellow-400">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="w-full md:w-1/3">
+                    <label for="userSelect" class="block text-sm font-bold text-gray-700 mb-2 flex items-center">
+                        <svg class="w-5 h-5 mr-1 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        Bộ lọc người dùng:
+                    </label>
+                    <select id="userSelect" class="block w-full px-4 py-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg border bg-gray-50 cursor-pointer shadow-sm">
+                        <option value="all">-- Tất cả gia đình --</option>
+                        <option value="khanh">Nhật Khánh</option>
+                        <option value="linh">Nhật Linh</option>
+                    </select>
+                </div>
+                <div class="text-sm text-gray-500 italic">
+                    * Chọn một người để xem thông tin chi tiết và lọc dữ liệu trên biểu đồ.
+                </div>
+            </div>
+
+            <!-- Khu vực hiển thị thông tin chi tiết (chỉ hiện khi chọn Khánh/Linh) -->
+            <div id="userInfoDisplay" class="mt-6 hidden grid-cols-1 md:grid-cols-3 gap-4 transition-all duration-300 border-t pt-6">
+                <!-- Data will be injected here -->
+            </div>
+        </div>
+
+        <!-- 2 BIỂU ĐỒ -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Biểu đồ 1: Thời gian sử dụng theo ngày (Line Chart) -->
+            <!-- Biểu đồ 1 -->
             <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-t-4 border-indigo-500">
-                <h2 class="text-lg md:text-xl font-bold text-center text-gray-800 mb-1">📈 Thời gian dùng theo ngày (7 ngày qua)</h2>
-                <p class="text-xs text-center text-gray-500 mb-4">So sánh thời gian (giờ) giữa các thành viên</p>
-                <div class="relative h-[350px] w-full">
+                <h2 class="text-lg md:text-xl font-bold text-center text-gray-800 mb-1">📈 Thời gian dùng theo ngày (7 ngày)</h2>
+                <div class="relative h-[350px] w-full mt-4">
                     <canvas id="dailyUsageChart"></canvas>
                 </div>
             </div>
 
-            <!-- Biểu đồ 2: Chéo thiết bị (Stacked Bar Chart) -->
+            <!-- Biểu đồ 2 -->
             <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-t-4 border-teal-500">
                 <h2 class="text-lg md:text-xl font-bold text-center text-gray-800 mb-1">🔄 Phân bổ mượn thiết bị</h2>
-                <p class="text-xs text-center text-gray-500 mb-4">Chi tiết mỗi người đang sử dụng máy của ai (Tổng giờ)</p>
-                <div class="relative h-[350px] w-full">
+                <div class="relative h-[350px] w-full mt-4">
                     <canvas id="crossUsageChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Combobox: Chi tiết người dùng -->
-        <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-yellow-400">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                Tra cứu thông tin chi tiết
-            </h2>
-            
-            <div class="max-w-md">
-                <label for="userSelect" class="block text-sm font-medium text-gray-700 mb-1">Chọn thành viên:</label>
-                <select id="userSelect" class="block w-full px-4 py-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-lg border bg-gray-50">
-                    <option value="">-- Vui lòng chọn --</option>
-                    <option value="khanh">Nhật Khánh</option>
-                    <option value="linh">Nhật Linh</option>
-                </select>
-            </div>
-
-            <!-- Khu vực hiển thị thông tin khi chọn -->
-            <div id="userInfoDisplay" class="mt-6 hidden grid-cols-1 md:grid-cols-3 gap-4 transition-all duration-300">
-                <!-- Data will be injected here -->
-            </div>
-        </div>
-
-        <!-- Refresh Button -->
-        <div class="flex flex-col items-center justify-center gap-2 mt-4">
+        <!-- Nút Refresh -->
+        <div class="flex flex-col items-center justify-center gap-2 mt-4 pb-8">
             <button id="refreshBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center w-full md:w-auto">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                Cập nhật dữ liệu hôm nay
+                Mô phỏng cập nhật dữ liệu hôm nay
             </button>
-            <p class="text-sm text-gray-500 text-center">
-                *Click để tăng số liệu ngày hôm nay trên biểu đồ đường.
-            </p>
         </div>
     </div>
 
@@ -79,88 +78,72 @@
             }
             return labels;
         };
+        const daysLabels = getLast7Days();
 
         const colors = {
-            bo: '#3b82f6', // Xanh dương
-            me: '#ec4899', // Hồng
-            ba: '#22c55e', // Xanh lá
-            con: '#a855f7' // Tím
+            bo: '#94a3b8',    // Xám nhạt (Bố)
+            me: '#94a3b8',    // Xám nhạt (Mẹ)
+            khanh: '#3b82f6', // Xanh dương (Khánh)
+            linh: '#ec4899'   // Hồng (Linh)
         };
 
-        // --- CHART 1: LINE CHART ---
+        const baseUserLabels = ['Bố', 'Mẹ', 'Nhật Khánh', 'Nhật Linh'];
+
+        // Dữ liệu gốc cho Biểu đồ 1 (Đường)
+        const originalDailyDatasets = [
+            { id: 'bo', label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 2, borderDash: [5, 5] },
+            { id: 'me', label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.4, borderWidth: 2, borderDash: [5, 5] },
+            { id: 'khanh', label: 'Nhật Khánh', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.khanh, backgroundColor: colors.khanh, tension: 0.4, borderWidth: 4 },
+            { id: 'linh', label: 'Nhật Linh', data: [2.0, 2.5, 1.8, 3.0, 3.5, 4.5, 3.5], borderColor: colors.linh, backgroundColor: colors.linh, tension: 0.4, borderWidth: 4 }
+        ];
+
+        // Dữ liệu gốc cho Biểu đồ 2 (Cột chồng)
+        const originalCrossDatasets = [
+            { label: 'Dùng máy của Bố', data: [18, 1, 4, 1], backgroundColor: colors.bo },
+            { label: 'Dùng máy của Mẹ', data: [0.5, 20, 8, 5], backgroundColor: colors.me },
+            { label: 'Dùng máy cá nhân (Khánh)', data: [0, 0, 5, 0], backgroundColor: colors.khanh },
+            { label: 'Dùng máy cá nhân (Linh)', data: [0, 0, 0, 6], backgroundColor: colors.linh }
+        ];
+
+        // --- KHỞI TẠO BIỂU ĐỒ 1 ---
         const ctxDaily = document.getElementById('dailyUsageChart').getContext('2d');
         const dailyChart = new Chart(ctxDaily, {
             type: 'line',
             data: {
-                labels: getLast7Days(),
-                datasets: [
-                    { label: 'Bố', data: [2.5, 3.0, 2.8, 3.5, 4.0, 3.2, 1.5], borderColor: colors.bo, backgroundColor: colors.bo, tension: 0.4, borderWidth: 3 },
-                    { label: 'Mẹ', data: [4.0, 3.5, 4.2, 3.8, 5.0, 4.5, 2.0], borderColor: colors.me, backgroundColor: colors.me, tension: 0.4, borderWidth: 3 },
-                    { label: 'Bà', data: [1.5, 1.2, 1.8, 1.5, 2.0, 1.7, 0.8], borderColor: colors.ba, backgroundColor: colors.ba, tension: 0.4, borderWidth: 3 },
-                    { label: 'Con', data: [1.0, 1.5, 1.2, 2.0, 4.5, 5.5, 3.0], borderColor: colors.con, backgroundColor: colors.con, tension: 0.4, borderWidth: 3 }
-                ]
+                labels: daysLabels,
+                datasets: JSON.parse(JSON.stringify(originalDailyDatasets)) // Clone object
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, title: { display: true, text: 'Số giờ' }, max: 12 }
-                },
-                plugins: {
-                    tooltip: { mode: 'index', intersect: false }
-                }
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, max: 10 } },
+                plugins: { tooltip: { mode: 'index', intersect: false } }
             }
         });
 
-        // --- CHART 2: STACKED BAR CHART ---
+        // --- KHỞI TẠO BIỂU ĐỒ 2 ---
         const ctxCross = document.getElementById('crossUsageChart').getContext('2d');
         const crossChart = new Chart(ctxCross, {
             type: 'bar',
             data: {
-                labels: ['Bố (Người dùng)', 'Mẹ (Người dùng)', 'Bà (Người dùng)', 'Con (Người dùng)'],
-                datasets: [
-                    { label: 'Dùng máy của Bố', data: [18, 1, 0, 4], backgroundColor: colors.bo },
-                    { label: 'Dùng máy của Mẹ', data: [0.5, 20, 1, 8], backgroundColor: colors.me },
-                    { label: 'Dùng máy của Bà', data: [0, 0.5, 10, 0], backgroundColor: colors.ba },
-                    { label: 'Dùng máy của Con', data: [0, 0, 0, 5], backgroundColor: colors.con }
-                ]
+                labels: baseUserLabels,
+                datasets: JSON.parse(JSON.stringify(originalCrossDatasets))
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { stacked: true },
-                    y: { stacked: true, title: { display: true, text: 'Tổng giờ (trong 7 ngày)' } }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) { return context.dataset.label + ': ' + context.parsed.y + ' giờ'; }
-                        }
-                    }
-                }
+                responsive: true, maintainAspectRatio: false,
+                scales: { x: { stacked: true }, y: { stacked: true } }
             }
         });
 
-        // --- COMBOBOX LOGIC ---
+
+        // --- LOGIC LỌC COMBOBOX ---
         const userDetails = {
             khanh: {
-                name: 'Nhật Khánh',
-                totalTime: '24.5 giờ',
-                topApps: 'YouTube (45%), Roblox (30%)',
-                favoriteDevice: 'Điện thoại Bố (Thường mượn buổi tối)',
-                color: 'text-blue-600',
-                bgColor: 'bg-blue-100',
-                icon: '👦'
+                name: 'Nhật Khánh', totalTime: '18.7 giờ', topApps: 'YouTube (45%), Roblox (30%)',
+                favoriteDevice: 'Thường mượn điện thoại Mẹ', color: 'text-blue-600', bgColor: 'bg-blue-50', icon: '👦'
             },
             linh: {
-                name: 'Nhật Linh',
-                totalTime: '28.2 giờ',
-                topApps: 'TikTok (50%), Instagram (35%)',
-                favoriteDevice: 'Điện thoại Mẹ (Thường mượn lúc ăn cơm)',
-                color: 'text-pink-600',
-                bgColor: 'bg-pink-100',
-                icon: '👧'
+                name: 'Nhật Linh', totalTime: '20.8 giờ', topApps: 'TikTok (50%), Instagram (35%)',
+                favoriteDevice: 'Thường mượn điện thoại Mẹ', color: 'text-pink-600', bgColor: 'bg-pink-50', icon: '👧'
             }
         };
 
@@ -168,44 +151,60 @@
             const val = e.target.value;
             const display = document.getElementById('userInfoDisplay');
             
-            if (!val) {
+            // Xử lý ẩn/hiện bảng chi tiết
+            if (val === 'all' || !val) {
                 display.classList.add('hidden');
                 display.classList.remove('grid');
-                return;
-            }
-            
-            const user = userDetails[val];
-            display.innerHTML = `
-                <div class="p-4 rounded-xl ${user.bgColor} flex flex-col justify-center items-center shadow-sm">
-                    <span class="text-4xl mb-2">${user.icon}</span>
-                    <h3 class="font-bold text-xl ${user.color}">${user.name}</h3>
-                </div>
-                <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 shadow-sm flex flex-col justify-center">
-                    <p class="text-sm text-gray-500 font-medium">Tổng thời gian (7 ngày)</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">${user.totalTime}</p>
-                    <div class="mt-4">
-                        <p class="text-sm text-gray-500 font-medium">Thiết bị mượn nhiều nhất</p>
+                
+                // Khôi phục Biểu đồ 1
+                dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets));
+                
+                // Khôi phục Biểu đồ 2
+                crossChart.data.labels = baseUserLabels;
+                crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets));
+            } else {
+                // Render nội dung bảng chi tiết
+                const user = userDetails[val];
+                display.innerHTML = `
+                    <div class="p-4 rounded-xl ${user.bgColor} flex flex-col justify-center items-center border border-gray-100">
+                        <span class="text-4xl mb-2">${user.icon}</span>
+                        <h3 class="font-bold text-xl ${user.color}">${user.name}</h3>
+                    </div>
+                    <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 flex flex-col justify-center">
+                        <p class="text-sm text-gray-500 font-medium">Tổng thời gian (7 ngày)</p>
+                        <p class="text-2xl font-bold text-gray-800 mt-1">${user.totalTime}</p>
+                        <p class="text-sm text-gray-500 font-medium mt-4">Thiết bị mượn nhiều nhất</p>
                         <p class="font-semibold text-gray-800 mt-1">${user.favoriteDevice}</p>
                     </div>
-                </div>
-                <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 shadow-sm flex flex-col justify-center">
-                    <p class="text-sm text-gray-500 font-medium">Ứng dụng tiêu thụ nhiều nhất</p>
-                    <div class="mt-2 space-y-2">
-                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
-                            <span class="text-gray-800 font-semibold">${user.topApps.split(', ')[0]}</span>
-                        </div>
-                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
-                            <span class="text-gray-800 font-semibold">${user.topApps.split(', ')[1]}</span>
+                    <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 flex flex-col justify-center">
+                        <p class="text-sm text-gray-500 font-medium">Ứng dụng tiêu thụ nhiều nhất</p>
+                        <div class="mt-2 space-y-2">
+                            <div class="bg-white p-2 rounded border border-gray-100"><span class="text-gray-800 font-semibold">${user.topApps.split(', ')[0]}</span></div>
+                            <div class="bg-white p-2 rounded border border-gray-100"><span class="text-gray-800 font-semibold">${user.topApps.split(', ')[1]}</span></div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
+                display.classList.remove('hidden');
+                display.classList.add('grid');
+
+                // Cập nhật Biểu đồ 1 (Chỉ hiện đường của người được chọn)
+                dailyChart.data.datasets = JSON.parse(JSON.stringify(originalDailyDatasets)).filter(ds => ds.id === val);
+
+                // Cập nhật Biểu đồ 2 (Chỉ hiện cột của người được chọn)
+                const targetIndex = val === 'khanh' ? 2 : 3;
+                crossChart.data.labels = [baseUserLabels[targetIndex]];
+                crossChart.data.datasets = JSON.parse(JSON.stringify(originalCrossDatasets)).map(ds => ({
+                    ...ds,
+                    data: [ds.data[targetIndex]]
+                }));
+            }
             
-            display.classList.remove('hidden');
-            display.classList.add('grid');
+            // Render lại animation chart
+            dailyChart.update();
+            crossChart.update();
         });
 
-        // --- NÚT CẬP NHẬT ---
+        // --- LOGIC NÚT CẬP NHẬT ---
         document.getElementById('refreshBtn').addEventListener('click', () => {
             dailyChart.data.datasets.forEach(dataset => {
                 const todayIndex = dataset.data.length - 1;
