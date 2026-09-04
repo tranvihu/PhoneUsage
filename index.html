@@ -148,7 +148,7 @@
                                 <tbody>
                                     <tr>
                                         <th class="w-1/3">Cán bộ phụ trách:</th>
-                                        <td class="font-bold text-gray-800 text-base uppercase">Đ/c Thành</td>
+                                        <td id="display_officerName_gps" class="font-bold text-gray-800 text-base uppercase">Đ/c Thành</td>
                                     </tr>
                                     <tr>
                                         <th class="text-blue-900">Địa chỉ giám sát:</th>
@@ -160,7 +160,7 @@
                                     </tr>
                                     <tr>
                                         <th>SĐT Liên hệ trực tiếp:</th>
-                                        <td class="font-bold text-blue-800 text-lg">0988.113.113</td>
+                                        <td id="display_officerPhone_gps" class="font-bold text-blue-800 text-lg">0988.113.113</td>
                                     </tr>
                                     <tr>
                                         <th class="text-red-700">Đường dây nóng:</th>
@@ -543,13 +543,6 @@
                     `;
                 }
 
-                // Chèn thêm thông tin cán bộ phụ trách
-                let officerInfo = '';
-                let cbName = appConfig.settings.officerName || 'Đ/c Trần Trung Kiên';
-                let cbPhone = appConfig.settings.officerPhone || '0988.123.456';
-                officerInfo += `<tr><th class="border p-2 bg-red-100 text-left text-red-800 uppercase">Cán bộ phụ trách:</th><td class="border p-2 font-black text-red-800">${cbName}</td></tr>`;
-                officerInfo += `<tr><th class="border p-2 bg-red-100 text-left text-red-800 uppercase">SĐT Liên hệ:</th><td class="border p-2 font-black text-red-800">${cbPhone}</td></tr>`;
-
                 display.innerHTML = `
                     <div class="bg-gray-200 p-2 font-bold text-gray-800 uppercase text-center border-b border-gray-400">
                         Hồ sơ viễn thông cá nhân
@@ -560,7 +553,6 @@
                                 <tbody>
                                     <tr><th class="border p-2 bg-gray-100 text-left w-1/3">Định danh:</th><td class="border p-2 font-black ${user.color || 'text-blue-800'} uppercase text-lg">${user.name}</td></tr>
                                     ${extraInfoHtml}
-                                    ${officerInfo}
                                     <tr><th class="border p-2 bg-gray-100 text-left">Tổng thời lượng (7 ngày):</th><td class="border p-2 font-black text-red-600 text-lg">${user.totalTime || 'N/A'}</td></tr>
                                     <tr><th class="border p-2 bg-gray-100 text-left">Thiết bị truy cập chính:</th><td class="border p-2 font-bold">${user.favoriteDevice || 'N/A'}</td></tr>
                                 </tbody>
@@ -641,6 +633,14 @@
 
         // Khởi tạo giao diện bằng dữ liệu từ appConfig
         function initializeDynamicUI() {
+            // Cập nhật thông tin Cán bộ và SĐT trên bảng GPS
+            if (document.getElementById('display_officerName_gps')) {
+                document.getElementById('display_officerName_gps').textContent = appConfig.settings.officerName || 'Đ/c Trần Trung Kiên';
+            }
+            if (document.getElementById('display_officerPhone_gps')) {
+                document.getElementById('display_officerPhone_gps').textContent = appConfig.settings.officerPhone || '0988.123.456';
+            }
+
             // 1. Render Combobox
             const userSelect = document.getElementById('userSelect');
             userSelect.innerHTML = '<option value="all">-- TOÀN BỘ DANH SÁCH --</option>';
