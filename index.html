@@ -738,14 +738,22 @@
                 
                 let extraChildFields = '';
                 if (user.type === 'child') {
+                    let platHtml = '<div class="mt-2 border-t pt-1"><span class="w-full block mb-1 text-[11px] uppercase text-gray-500">Nền tảng sử dụng:</span><div class="grid grid-cols-2 gap-1 text-[11px] font-normal">';
+                    appConfig.platforms.forEach(p => {
+                        let isChecked = (user.weights && user.weights[p.id] > 0) ? 'checked' : '';
+                        platHtml += `<label class="flex items-center gap-1 cursor-pointer hover:bg-gray-200 p-0.5 rounded"><input type="checkbox" class="cfg_mem_plat_${id}" value="${p.id}" ${isChecked}> ${p.icon} ${p.name}</label>`;
+                    });
+                    platHtml += '</div></div>';
+
                     extraChildFields = `
                         <div class="flex items-center"><span class="w-32">Trường học:</span><input type="text" id="cfg_mem_${id}_school" class="border flex-grow p-1" value="${user.school || ''}"></div>
                         <div class="flex items-center"><span class="w-32">GV Chủ nhiệm:</span><input type="text" id="cfg_mem_${id}_teacher" class="border flex-grow p-1" value="${user.teacher || ''}"></div>
+                        ${platHtml}
                     `;
                 }
 
                 html += `
-                <div class="border p-3 bg-gray-50 border-gray-400">
+                <div class="border p-3 bg-gray-50 border-gray-400 flex flex-col justify-between">
                     <h4 class="font-bold text-red-700 uppercase mb-2">Hồ sơ: ${labelName}</h4>
                     <div class="flex gap-4">
                         <div class="w-20 h-24 flex-shrink-0 bg-gray-200 border-2 border-gray-400 overflow-hidden rounded flex items-center justify-center relative cursor-pointer" title="Click để tải ảnh" onclick="document.getElementById('cfg_mem_${id}_avatar_file').click()">
@@ -873,6 +881,13 @@
                         appConfig.members[id].className = document.getElementById(`cfg_mem_${id}_work`).value;
                         if (document.getElementById(`cfg_mem_${id}_school`)) appConfig.members[id].school = document.getElementById(`cfg_mem_${id}_school`).value;
                         if (document.getElementById(`cfg_mem_${id}_teacher`)) appConfig.members[id].teacher = document.getElementById(`cfg_mem_${id}_teacher`).value;
+                        
+                        let w = {};
+                        document.querySelectorAll(`.cfg_mem_plat_${id}`).forEach(cb => {
+                            w[cb.value] = cb.checked ? (appConfig.members[id].weights[cb.value] || 20) : 0;
+                        });
+                        if (Object.keys(w).length > 0) appConfig.members[id].weights = w;
+                        
                     } else {
                         appConfig.members[id].job = document.getElementById(`cfg_mem_${id}_work`).value;
                     }
@@ -975,6 +990,12 @@
             for (let i = 1; i <= numChildren; i++) {
                 let cKey = 'child' + i;
                 if (document.getElementById(`cfg_mem_${cKey}_name`)) {
+                    // Lấy trọng số nền tảng (weights)
+                    let w = {};
+                    document.querySelectorAll(`.cfg_mem_plat_${cKey}`).forEach(cb => {
+                        w[cb.value] = cb.checked ? ((appConfig.members[cKey] && appConfig.members[cKey].weights && appConfig.members[cKey].weights[cb.value]) || 20) : 0;
+                    });
+                    
                     // Cập nhật từ form nếu đã tồn tại
                     newMembers[cKey] = {
                         ...appConfig.members[cKey],
@@ -984,6 +1005,7 @@
                         school: document.getElementById(`cfg_mem_${cKey}_school`) ? document.getElementById(`cfg_mem_${cKey}_school`).value : '',
                         teacher: document.getElementById(`cfg_mem_${cKey}_teacher`) ? document.getElementById(`cfg_mem_${cKey}_teacher`).value : ''
                     };
+                    if (Object.keys(w).length > 0) newMembers[cKey].weights = w;
                 } else {
                     // Tạo mới hoàn toàn nếu chưa tồn tại trên form (do tăng số lượng)
                     const existingChild = appConfig.members[cKey];
