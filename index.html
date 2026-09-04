@@ -57,7 +57,13 @@
                         <!-- Dynamic options will be rendered here -->
                     </select>
                 </div>
-                <p class="text-xs text-red-600 font-bold mt-2 italic">* Cảnh báo: Mọi truy cập đều được ghi log tại máy chủ của Bộ Công An.</p>
+                
+                <div class="mt-4 p-3 bg-red-100 border-2 border-red-600 shadow-sm flex items-center justify-center animate-pulse">
+                    <span class="text-2xl mr-3">⚠️</span>
+                    <p class="text-sm md:text-base text-red-800 font-black uppercase text-center">
+                        CẢNH BÁO TỐI MẬT: MỌI TRUY CẬP VÀ THAO TÁC ĐỀU ĐANG ĐƯỢC GHI LOG TRỰC TIẾP TẠI MÁY CHỦ BỘ CÔNG AN.
+                    </p>
+                </div>
 
                 <!-- Khu vực hiển thị thông tin chi tiết -->
                 <div id="userInfoDisplay" class="mt-6 hidden border border-gray-300 bg-white">
@@ -548,15 +554,20 @@
                         Hồ sơ viễn thông cá nhân
                     </div>
                     <div class="p-4 flex flex-col xl:flex-row gap-6">
-                        <div class="w-full xl:w-1/2">
-                            <table class="w-full text-sm border-collapse shadow-sm">
-                                <tbody>
-                                    <tr><th class="border p-2 bg-gray-100 text-left w-1/3">Định danh:</th><td class="border p-2 font-black ${user.color || 'text-blue-800'} uppercase text-lg">${user.name}</td></tr>
-                                    ${extraInfoHtml}
-                                    <tr><th class="border p-2 bg-gray-100 text-left">Tổng thời lượng (7 ngày):</th><td class="border p-2 font-black text-red-600 text-lg">${user.totalTime || 'N/A'}</td></tr>
-                                    <tr><th class="border p-2 bg-gray-100 text-left">Thiết bị truy cập chính:</th><td class="border p-2 font-bold">${user.favoriteDevice || 'N/A'}</td></tr>
-                                </tbody>
-                            </table>
+                        <div class="w-full xl:w-1/2 flex gap-4">
+                            <div class="w-24 h-32 flex-shrink-0 bg-gray-200 border-2 border-gray-400 p-1 flex flex-col items-center shadow-sm">
+                                <img src="${user.avatar || 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-grow">
+                                <table class="w-full text-sm border-collapse shadow-sm">
+                                    <tbody>
+                                        <tr><th class="border p-2 bg-gray-100 text-left w-1/3">Định danh:</th><td class="border p-2 font-black ${user.color || 'text-blue-800'} uppercase text-lg">${user.name}</td></tr>
+                                        ${extraInfoHtml}
+                                        <tr><th class="border p-2 bg-gray-100 text-left">Tổng thời lượng (7 ngày):</th><td class="border p-2 font-black text-red-600 text-lg">${user.totalTime || 'N/A'}</td></tr>
+                                        <tr><th class="border p-2 bg-gray-100 text-left">Thiết bị truy cập chính:</th><td class="border p-2 font-bold">${user.favoriteDevice || 'N/A'}</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="w-full xl:w-1/2">
                             <table class="w-full text-sm border-collapse shadow-sm">
@@ -744,11 +755,20 @@
                 html += `
                 <div class="border p-3 bg-gray-50 border-gray-400">
                     <h4 class="font-bold text-red-700 uppercase mb-2">Hồ sơ: ${labelName}</h4>
-                    <div class="space-y-2 text-sm font-semibold">
-                        <div class="flex items-center"><span class="w-32">Tên hiển thị:</span><input type="text" id="cfg_mem_${id}_name" class="border flex-grow p-1" value="${user.name}"></div>
-                        <div class="flex items-center"><span class="w-32">Ngày sinh:</span><input type="text" id="cfg_mem_${id}_dob" class="border flex-grow p-1" value="${user.dob || ''}"></div>
-                        <div class="flex items-center"><span class="w-32">Lớp/Nghề nghiệp:</span><input type="text" id="cfg_mem_${id}_work" class="border flex-grow p-1" value="${user.job || user.className || ''}"></div>
-                        ${extraChildFields}
+                    <div class="flex gap-4">
+                        <div class="w-20 h-24 flex-shrink-0 bg-gray-200 border-2 border-gray-400 overflow-hidden rounded flex items-center justify-center relative cursor-pointer" title="Click để tải ảnh" onclick="document.getElementById('cfg_mem_${id}_avatar_file').click()">
+                            <img id="cfg_mem_${id}_avatar_preview" src="${user.avatar || 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                <span class="text-white text-xs font-bold text-center">TẢI<br>ẢNH</span>
+                            </div>
+                        </div>
+                        <input type="file" id="cfg_mem_${id}_avatar_file" accept="image/*" class="hidden" onchange="window.handleAvatarUpload(this, '${id}')">
+                        <div class="space-y-2 text-sm font-semibold flex-grow">
+                            <div class="flex items-center"><span class="w-24">Tên hiển thị:</span><input type="text" id="cfg_mem_${id}_name" class="border flex-grow p-1" value="${user.name}"></div>
+                            <div class="flex items-center"><span class="w-24">Ngày sinh:</span><input type="text" id="cfg_mem_${id}_dob" class="border flex-grow p-1" value="${user.dob || ''}"></div>
+                            <div class="flex items-center"><span class="w-24">Lớp/Nghề:</span><input type="text" id="cfg_mem_${id}_work" class="border flex-grow p-1" value="${user.job || user.className || ''}"></div>
+                            ${extraChildFields}
+                        </div>
                     </div>
                 </div>`;
             }
@@ -811,6 +831,42 @@
 
             adminFormContainer.innerHTML = html;
         }
+
+        window.handleAvatarUpload = function(input, userId) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 150;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    document.getElementById(`cfg_mem_${userId}_avatar_preview`).src = dataUrl;
+                    appConfig.members[userId].avatar = dataUrl; // Save to memory immediately
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
 
         window.updateChildrenCount = function(val) {
             let numChildren = parseInt(val) || 2;
