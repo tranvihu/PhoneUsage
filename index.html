@@ -813,8 +813,8 @@
             appConfig.platforms.forEach(p => {
                 html += `
                 <div class="flex gap-1 platform-row border p-1 bg-gray-50 items-center">
-                    <span class="w-8 text-center text-lg" title="Icon tự động">${window.getPlatformIcon ? window.getPlatformIcon(p.id) : p.icon}</span>
-                    <input type="text" class="border p-1 w-20 text-xs p-id" value="${p.id}" placeholder="ID (zalo)">
+                    ${window.renderIconSelect ? window.renderIconSelect(p.icon) : ''}
+                    <input type="hidden" class="p-id" value="${p.id}">
                     <input type="text" class="border p-1 flex-grow text-sm p-name font-bold text-blue-900" value="${p.name}" placeholder="Tên hiển thị">
                     <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 font-bold rounded" title="Xóa">X</button>
                 </div>`;
@@ -917,13 +917,18 @@
             list.appendChild(div);
         };
 
-        window.getPlatformIcon = function(id) {
-            const map = {
-                youtube: '📺', facebook: '📘', zalo: '💬', tiktok: '🎵', 
-                shopee: '🛒', call: '📞', game: '🎮', web: '🌐', duolingo: '🦉',
-                messenger: '💬', instagram: '📸', netflix: '🎬'
-            };
-            return map[id.toLowerCase()] || '📱';
+        window.renderIconSelect = function(currentIcon) {
+            const icons = ['📱','📺','📘','💬','🎵','🛒','📞','🎮','🌐','🦉','📸','🎬','✉️','📱'];
+            let opts = '';
+            let found = false;
+            icons.forEach(i => {
+                if (i === currentIcon) found = true;
+                opts += `<option value="${i}" ${i === currentIcon ? 'selected' : ''}>${i}</option>`;
+            });
+            if (!found && currentIcon) {
+                opts = `<option value="${currentIcon}" selected>${currentIcon}</option>` + opts;
+            }
+            return `<select class="border p-1 bg-white p-icon text-lg cursor-pointer outline-none">${opts}</select>`;
         };
 
         window.addPlatformRow = function() {
@@ -931,7 +936,8 @@
             const div = document.createElement('div');
             div.className = "flex gap-1 platform-row border p-1 bg-gray-50 items-center";
             div.innerHTML = `
-                <input type="text" class="border p-1 w-20 text-xs p-id" placeholder="ID (mã)">
+                ${window.renderIconSelect('📱')}
+                <input type="hidden" class="p-id" value="">
                 <input type="text" class="border p-1 flex-grow text-sm p-name font-bold text-blue-900" placeholder="Tên hiển thị">
                 <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 font-bold rounded" title="Xóa">X</button>
             `;
@@ -1028,8 +1034,12 @@
             platRows.forEach(row => {
                 let id = row.querySelector('.p-id').value.trim();
                 let name = row.querySelector('.p-name').value.trim();
-                if (id && name) {
-                    let icon = window.getPlatformIcon ? window.getPlatformIcon(id) : '📱';
+                let icon = row.querySelector('.p-icon') ? row.querySelector('.p-icon').value : '📱';
+                
+                if (name) {
+                    if (!id) {
+                        id = name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').substring(0, 15);
+                    }
                     appConfig.platforms.push({ id: id, name: name, icon: icon });
                 }
             });
