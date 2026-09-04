@@ -181,14 +181,6 @@
 
             </div> <!-- END of main panel body -->
         </div> <!-- END of main panel -->
-
-        <!-- Nút Refresh -->
-        <div class="flex justify-center mt-6">
-            <button id="refreshBtn" class="bg-blue-900 hover:bg-blue-800 text-white font-bold uppercase tracking-wider py-3 px-8 border-2 border-blue-950 shadow-md transition-colors flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                Truy xuất & Đồng bộ dữ liệu máy chủ
-            </button>
-        </div>
     </div>
 
     <!-- FOOTER CÔNG AN -->
@@ -821,7 +813,7 @@
             appConfig.platforms.forEach(p => {
                 html += `
                 <div class="flex gap-1 platform-row border p-1 bg-gray-50 items-center">
-                    <input type="text" class="border p-1 w-10 text-center p-icon" value="${p.icon}" title="Icon/Emoji">
+                    <span class="w-8 text-center text-lg" title="Icon tự động">${window.getPlatformIcon ? window.getPlatformIcon(p.id) : p.icon}</span>
                     <input type="text" class="border p-1 w-20 text-xs p-id" value="${p.id}" placeholder="ID (zalo)">
                     <input type="text" class="border p-1 flex-grow text-sm p-name font-bold text-blue-900" value="${p.name}" placeholder="Tên hiển thị">
                     <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 font-bold rounded" title="Xóa">X</button>
@@ -925,12 +917,20 @@
             list.appendChild(div);
         };
 
+        window.getPlatformIcon = function(id) {
+            const map = {
+                youtube: '📺', facebook: '📘', zalo: '💬', tiktok: '🎵', 
+                shopee: '🛒', call: '📞', game: '🎮', web: '🌐', duolingo: '🦉',
+                messenger: '💬', instagram: '📸', netflix: '🎬'
+            };
+            return map[id.toLowerCase()] || '📱';
+        };
+
         window.addPlatformRow = function() {
             const list = document.getElementById('cfg_platform_list');
             const div = document.createElement('div');
             div.className = "flex gap-1 platform-row border p-1 bg-gray-50 items-center";
             div.innerHTML = `
-                <input type="text" class="border p-1 w-10 text-center p-icon" placeholder="Icon">
                 <input type="text" class="border p-1 w-20 text-xs p-id" placeholder="ID (mã)">
                 <input type="text" class="border p-1 flex-grow text-sm p-name font-bold text-blue-900" placeholder="Tên hiển thị">
                 <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 font-bold rounded" title="Xóa">X</button>
@@ -1026,45 +1026,16 @@
             const platRows = document.querySelectorAll('.platform-row');
             appConfig.platforms = [];
             platRows.forEach(row => {
-                let icon = row.querySelector('.p-icon').value.trim();
                 let id = row.querySelector('.p-id').value.trim();
                 let name = row.querySelector('.p-name').value.trim();
                 if (id && name) {
+                    let icon = window.getPlatformIcon ? window.getPlatformIcon(id) : '📱';
                     appConfig.platforms.push({ id: id, name: name, icon: icon });
                 }
             });
 
             localStorage.setItem('phoneUsageConfig', JSON.stringify(appConfig));
             location.reload(); // Tải lại trang để áp dụng
-        });
-
-        document.getElementById('refreshBtn').addEventListener('click', () => {
-            dailyChart.data.datasets.forEach(dataset => {
-                const todayIndex = dataset.data.length - 1;
-                const increase = (Math.random() * 0.5) + 0.1;
-                dataset.data[todayIndex] = Math.min(24, dataset.data[todayIndex] + increase);
-            });
-            dailyChart.update();
-
-            const btn = document.getElementById('refreshBtn');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = 'ĐANG ĐỒNG BỘ...';
-            btn.classList.add('opacity-75');
-            
-            setTimeout(() => {
-                btn.innerHTML = 'ĐỒNG BỘ HOÀN TẤT';
-                btn.classList.replace('bg-blue-900', 'bg-green-700');
-                btn.classList.replace('hover:bg-blue-800', 'hover:bg-green-600');
-                btn.classList.replace('border-blue-950', 'border-green-900');
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.classList.remove('opacity-75');
-                    btn.classList.replace('bg-green-700', 'bg-blue-900');
-                    btn.classList.replace('hover:bg-green-600', 'hover:bg-blue-800');
-                    btn.classList.replace('border-green-900', 'border-blue-950');
-                }, 2000);
-            }, 800);
         });
     </script>
 </body>
